@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso | Agua Filtrada - Laboratorio de Procesos Industriales</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .encabezado-institucional { width: 100%; }
+        .encabezado-interior { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
+        .encabezado-texto h1 { margin-bottom: 6px; }
+        .encabezado-texto p { margin-top: 5px; margin-bottom: 0; }
+        .encabezado-subtitulo { opacity: .85; font-size: .94rem; }
+        .marca-carrera { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; min-width: 104px; min-height: 80px; }
+        .marca-carrera img { display: block; max-width: 148px; max-height: 90px; width: auto; height: auto; object-fit: contain; }
+        .marca-fallback { display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; border: 2px solid currentColor; border-radius: 50%; font-size: 1.15rem; font-weight: 800; letter-spacing: .06em; }
+        .acceso-panel { max-width: 820px; margin-left: auto; margin-right: auto; }
+        .acceso-panel h2 { margin-top: 0; }
+        .mensaje:empty { display: none; }
+        @media (max-width: 560px) {
+            .encabezado-interior { align-items: flex-start; gap: 12px; }
+            .marca-carrera { min-width: 64px; min-height: 64px; }
+            .marca-carrera img { max-width: 76px; max-height: 64px; }
+            .marca-fallback { width: 54px; height: 54px; font-size: .95rem; }
+        }
+    </style>
+</head>
+<body>
+<header class="encabezado encabezado-institucional">
+    <div class="encabezado-interior">
+        <div class="encabezado-texto">
+            <h1>Agua Filtrada</h1>
+            <p><strong>Laboratorio de Procesos Industriales</strong></p>
+            <p class="encabezado-subtitulo">Sistema de registro y control del proceso</p>
+        </div>
+        <div class="marca-carrera" aria-label="Identidad del Laboratorio de Procesos Industriales">
+            <img src="/static/logo-carrera.png" alt="Logo de la carrera"
+                 onload="document.getElementById('marca-fallback').style.display='none'"
+                 onerror="this.style.display='none'">
+            <div id="marca-fallback" class="marca-fallback" title="Logo institucional pendiente">LPI</div>
+        </div>
+    </div>
+</header>
+
+<main class="contenedor">
+    <section class="panel acceso-panel">
+        <h2>Bienvenido</h2>
+        <p class="texto-ayuda">Seleccione el tipo de acceso que corresponde.</p>
+
+        <div class="grid">
+            <button type="button" class="boton-menu" onclick="entrarComoSolicitante()">
+                📝 Soy solicitante
+            </button>
+            <button type="button" class="boton-menu" onclick="mostrarLoginOperador()">
+                🔧 Soy operador
+            </button>
+        </div>
+
+        <div id="login-operador" class="control-item oculto">
+            <h3>Acceso de operadores</h3>
+            <label for="operador-login">Seleccione su nombre</label>
+            <select id="operador-login">
+                <option value="">Cargando operadores...</option>
+            </select>
+
+            <label for="clave-operador">Contraseña compartida</label>
+            <input id="clave-operador" type="password" autocomplete="current-password" placeholder="Ingrese la contraseña">
+
+            <button type="button" class="btn-principal btn-guardar" onclick="iniciarSesionOperador()">
+                INGRESAR AL SISTEMA
+            </button>
+        </div>
+
+        <div id="mensaje-acceso" class="mensaje" role="status" aria-live="polite"></div>
+    </section>
+</main>
+
+<script>
+async function cargarOperadoresLogin() {
+    const select = document.getElementById("operador-login");
+    try {
+        const respuesta = await fetch("/api/operadores");
+        const operadores = await respuesta.json();
+        if (!respuesta.ok) throw new Error("No se pudo cargar la lista de operadores.");
+
+        select.innerHTML = '<option value="">Seleccione su nombre</option>';
+        operadores.forEach(operador => {
+            const opcion = document.createElement("option");
+            opcion.value = operador.id;
+            opcion.textContent = operador.nombre;
+            select.appendChild(opcion);
+        });
+    } catch (error) {
+        select.innerHTML = '<option value="">No se pudo cargar la lista</option>';
+        document.getElementById("mensaje-acceso").textContent =
+            "No fue posible cargar los operadores. Compruebe el servidor.";
+        console.error(error);
+    }
+}
+
+function mostrarLoginOperador() {
+    document.getElementById("login-operador").classList.remove("oculto");
+    document.getElementById("operador-login").focus();
+}
+
+function entrarComoSolicitante() {
+    window.location.href = "/solicitar";
+}
+
+async function iniciarSesionOperador() {
+    const operadorId = document.getElementById("operador-login").value;
+    const clave = document.getElementById("clave-operador").value;
+    const mensaje = document.getElementById("mensaje-acceso");
+
+    if (!operadorId) {
+        alert("Debe seleccionar su nombre.");
+        return;
+    }
+    if (!clave) {
+        alert("Debe escribir la contraseña.");
+        return;
+    }
+
+    try {
+        const respuesta = await fetch("/api/acceso-operador", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ operador_id: Number(operadorId), clave: clave })
+        });
+        const resultado = await respuesta.json();
+        if (!respuesta.ok) {
+            mensaje.textContent = resultado.detail || "No se pudo iniciar sesión.";
+            return;
+        }
+        window.location.href = "/operacion";
+    } catch (error) {
+        console.error(error);
+        mensaje.textContent = "No fue posible comunicarse con el servidor.";
+    }
+}
+
+document.getElementById("clave-operador").addEventListener("keydown", evento => {
+    if (evento.key === "Enter") iniciarSesionOperador();
+});
+
+cargarOperadoresLogin();
+</script>
+</body>
+</html>

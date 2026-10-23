@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar agua filtrada | Laboratorio de Procesos Industriales</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="encabezado">
+    <div>
+        <h1>Agua Filtrada</h1>
+        <p>Laboratorio de Procesos Industriales</p>
+        <p>Sistema de solicitudes</p>
+    </div>
+</header>
+
+<main class="contenedor">
+    <section class="panel">
+        <div class="cabecera-modulo">
+            <div>
+                <h2>Realizar una solicitud</h2>
+                <p class="texto-ayuda">
+                    Seleccione el área correspondiente y complete los datos.
+                    Las solicitudes nuevas quedan pendientes de revisión por el laboratorio.
+                </p>
+            </div>
+            <button type="button" class="btn-secundario" onclick="window.location.href='/'">
+                Volver al inicio
+            </button>
+        </div>
+
+        <div class="control-item">
+            <label for="solicitud-area">Área solicitante</label>
+            <select id="solicitud-area" required>
+                <option value="">Cargando áreas...</option>
+            </select>
+        </div>
+
+        <div class="control-item">
+            <label for="solicitud-solicitante">Nombre del solicitante</label>
+            <input id="solicitud-solicitante" type="text" maxlength="120" required placeholder="Escriba su nombre" autocomplete="name">
+        </div>
+
+        <div class="control-item">
+            <label for="solicitud-bidones">Cantidad de bidones (20 L)</label>
+            <input id="solicitud-bidones" type="number" min="0" step="1" value="0" required>
+        </div>
+
+        <div class="control-item">
+            <label for="solicitud-botellas">Cantidad de botellas (600 mL)</label>
+            <input id="solicitud-botellas" type="number" min="0" step="1" value="0" required>
+        </div>
+
+        <div class="control-item">
+            <label for="solicitud-observacion">Observaciones o lugar de entrega</label>
+            <textarea id="solicitud-observacion" rows="4" maxlength="1000" placeholder="Indique dónde se necesita la entrega u otra información relevante."></textarea>
+        </div>
+
+        <button id="btn-enviar-solicitud" type="button" class="btn-principal btn-guardar" onclick="enviarSolicitud()" disabled>
+            ENVIAR SOLICITUD
+        </button>
+
+        <div id="resultado-solicitud" class="mensaje" role="status" aria-live="polite"></div>
+    </section>
+</main>
+
+<script>
+let areasCargadas = false;
+
+async function cargarAreasSolicitante() {
+    const selector = document.getElementById("solicitud-area");
+    const boton = document.getElementById("btn-enviar-solicitud");
+    const resultado = document.getElementById("resultado-solicitud");
+
+    try {
+        const respuesta = await fetch("/api/areas");
+        const areas = await respuesta.json();
+        if (!respuesta.ok || !Array.isArray(areas) || areas.length === 0) {
+            throw new Error("No se pudo obtener la lista de áreas.");
+        }
+
+        selector.innerHTML = '<option value="">Seleccione un área</option>';
+        areas.forEach(area => {
+            const opcion = document.createElement("option");
+            opcion.value = area;
+            opcion.textContent = area;
+            selector.appendChild(opcion);
+        });
+
+        areasCargadas = true;
+        boton.disabled = false;
+    } catch (error) {
+        console.error("Error al cargar las áreas:", error);
+        selector.innerHTML = '<option value="">No se pudo cargar la lista</option>';
+        resultado.textContent = "No fue posible cargar las áreas. Actualice la página e inténtelo de nuevo.";
+        boton.disabled = true;
+    }
+}
+
+async function enviarSolicitud() {
+    const area = document.getElementById("solicitud-area").value;
+    const solicitante = document.getElementById("solicitud-solicitante").value.trim();
+    const bidonesTexto = document.getElementById("solicitud-bidones").value.trim();
+    const botellasTexto = document.getElementById("solicitud-botellas").value.trim();
+    const observacion = document.getElementById("solicitud-observacion").value.trim();
+    const resultado = document.getElementById("resultado-solicitud");
+    const boton = document.getElementById("btn-enviar-solicitud");
+
+    if (!areasCargadas) {
+        alert("La lista de áreas todavía no está disponible. Actualice la página e inténtelo de nuevo.");
+        return;
+    }
+    if (!area) {
+        alert("Debe seleccionar el área solicitante.");
+        document.getElementById("solicitud-area").focus();
+        return;
+    }
+    if (!solicitante) {
+        alert("Debe indicar el nombre del solicitante.");
+        document.getElementById("solicitud-solicitante").focus();
+        return;
+    }
+    if (bidonesTexto === "" || botellasTexto === "") {
+        alert("Debe indicar las cantidades solicitadas.");
+        return;
+    }
+
+    const bidones = Number(bidonesTexto);
+    const botellas = Number(botellasTexto);
+    if (!Number.isSafeInteger(bidones) || !Number.isSafeInteger(botellas) || bidones < 0 || botellas < 0) {
+        alert("Las cantidades deben ser números enteros iguales o mayores que cero.");
+        return;
+    }
+    if (bidones === 0 && botellas === 0) {
+        alert("Debe solicitar al menos un bidón (20 L) o una botella (600 mL).");
+        return;
+    }
+
+    boton.disabled = true;
+    resultado.textContent = "Enviando solicitud...";
+
+    try {
+        const respuesta = await fetch("/api/pedidos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            // El campo legado "oficina" se conserva para no alterar
+            // la estructura de la base de datos ni los registros previos.
+            body: JSON.stringify({
+                oficina: area,
+                solicitante: solicitante,
+                garrafones: bidones,
+                botellas: botellas,
+                observacion: observacion
+            })
+        });
+
+        const datos = await respuesta.json();
+        if (!respuesta.ok) {
+            resultado.textContent = datos.detail || "No se pudo registrar la solicitud.";
+            return;
+        }
+
+        resultado.textContent = "Solicitud registrada correctamente. Número de pedido: #" + datos.id + ". Estado inicial: Pendiente. Conserve este número como referencia.";
+        document.getElementById("solicitud-area").value = "";
+        document.getElementById("solicitud-solicitante").value = "";
+        document.getElementById("solicitud-bidones").value = "0";
+        document.getElementById("solicitud-botellas").value = "0";
+        document.getElementById("solicitud-observacion").value = "";
+    } catch (error) {
+        console.error("Error al registrar la solicitud:", error);
+        resultado.textContent = "No fue posible comunicarse con el servidor. Compruebe la conexión e inténtelo de nuevo.";
+    } finally {
+        boton.disabled = false;
+    }
+}
+
+cargarAreasSolicitante();
+</script>
+</body>
+</html>

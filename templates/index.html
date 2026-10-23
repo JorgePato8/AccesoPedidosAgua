@@ -1,0 +1,7305 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Agua Potable Lab</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="encabezado">
+
+    <div>
+
+        <h1>Agua Potable Lab</h1>
+
+        <p>
+            Sistema de registro y control del proceso
+        </p>
+
+        <p>
+    Operador activo:
+    <strong id="operador-sesion-nombre"></strong>
+</p>
+
+<button
+    type="button"
+    class="btn-secundario"
+    onclick="cerrarSesionOperador()"
+>
+    Cerrar sesión
+</button>
+
+    </div>
+
+</header>
+
+
+
+<main class="contenedor">
+
+
+    <!-- INICIO DE OPERACIÓN -->
+
+    <section class="panel">
+
+        <h2>Inicio de operación</h2>
+
+        <label for="operador">
+            Operador responsable
+        </label>
+
+
+        <div class="fila">
+
+            <select id="operador">
+
+                <option value="">
+                    Seleccione un operador
+                </option>
+
+            </select>
+
+
+            <button
+                class="btn-secundario"
+                onclick="abrirRegistroOperador()"
+            >
+                + Nuevo operador
+            </button>
+
+        </div>
+
+
+        <div
+            id="mensaje-operador"
+            class="mensaje"
+        ></div>
+
+    </section>
+
+
+
+    <!-- CREAR LOTE -->
+
+    <section class="panel">
+
+        <h2>Producción</h2>
+
+        <p class="texto-ayuda">
+
+            Seleccione el operador responsable
+            y cree un nuevo lote para comenzar.
+
+        </p>
+
+
+        <button
+            id="btn-lote"
+            class="btn-principal"
+            onclick="crearLote()"
+        >
+
+            INICIAR NUEVO LOTE
+
+        </button>
+
+
+        <div
+            id="lote-creado"
+            class="lote"
+        ></div>
+
+    </section>
+
+
+
+    <!-- MENÚ PRINCIPAL -->
+
+    <section
+        class="panel oculto"
+        id="menu-operacion"
+    >
+
+        <h2>Registro del proceso</h2>
+
+
+        <div class="grid">
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirControlTratamiento()"
+            >
+
+                💧 Control del agua
+
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirControlTanque()"
+>
+                 🛢️ Control del tanque
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirControlUV()"
+>
+                ☀️ Control UV
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirPreparacionGarrafones()"
+>
+                🧴 Preparación de envases
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirRegistroLlenado()"
+>
+                🚰 Registro de llenado
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirControlCalidad()"
+>
+                🧪 Control de calidad
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirLimpiezaDesinfeccion()"
+            >
+                🧹 Limpieza
+            </button>
+
+
+            <button
+                class="boton-menu"
+                onclick="abrirMantenimiento()"
+>
+
+                🔧 Mantenimiento
+
+            </button>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTROL DEL TRATAMIENTO -->
+
+    <section
+        class="panel oculto"
+        id="panel-tratamiento"
+    >
+
+
+        <div class="cabecera-modulo">
+
+
+            <div>
+
+                <h2>
+                    Control del tratamiento del agua
+                </h2>
+
+                <p
+                    id="informacion-lote"
+                    class="texto-ayuda"
+                ></p>
+
+            </div>
+
+
+            <button
+                class="btn-secundario"
+                onclick="cerrarControlTratamiento()"
+            >
+
+                Volver
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- SEDIMENTOS -->
+
+        <div class="control-item">
+
+            <h3>
+                Filtro de sedimentos
+            </h3>
+
+
+            <div class="estado-botones">
+
+                <button
+                    class="estado-btn"
+                    id="sedimentos-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'sedimentos',
+                            'Conforme'
+                        )
+                    "
+                >
+
+                    ✓ Conforme
+
+                </button>
+
+
+                <button
+                    class="estado-btn"
+                    id="sedimentos-no-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'sedimentos',
+                            'No conforme'
+                        )
+                    "
+                >
+
+                    ✕ No conforme
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CARBÓN -->
+
+        <div class="control-item">
+
+            <h3>
+                Carbón activado
+            </h3>
+
+
+            <div class="estado-botones">
+
+                <button
+                    class="estado-btn"
+                    id="carbon_activado-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'carbon_activado',
+                            'Conforme'
+                        )
+                    "
+                >
+
+                    ✓ Conforme
+
+                </button>
+
+
+                <button
+                    class="estado-btn"
+                    id="carbon_activado-no-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'carbon_activado',
+                            'No conforme'
+                        )
+                    "
+                >
+
+                    ✕ No conforme
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RESINA -->
+
+        <div class="control-item">
+
+            <h3>
+                Resina catiónica SAC
+            </h3>
+
+
+            <div class="estado-botones">
+
+                <button
+                    class="estado-btn"
+                    id="resina_sac-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'resina_sac',
+                            'Conforme'
+                        )
+                    "
+                >
+
+                    ✓ Conforme
+
+                </button>
+
+
+                <button
+                    class="estado-btn"
+                    id="resina_sac-no-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'resina_sac',
+                            'No conforme'
+                        )
+                    "
+                >
+
+                    ✕ No conforme
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ÓSMOSIS -->
+
+        <div class="control-item">
+
+            <h3>
+                Ósmosis inversa
+            </h3>
+
+
+            <div class="estado-botones">
+
+                <button
+                    class="estado-btn"
+                    id="osmosis_inversa-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'osmosis_inversa',
+                            'Conforme'
+                        )
+                    "
+                >
+
+                    ✓ Conforme
+
+                </button>
+
+
+                <button
+                    class="estado-btn"
+                    id="osmosis_inversa-no-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'osmosis_inversa',
+                            'No conforme'
+                        )
+                    "
+                >
+
+                    ✕ No conforme
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BOMBA -->
+
+        <div class="control-item">
+
+            <h3>
+                Bomba
+            </h3>
+
+
+            <div class="estado-botones">
+
+                <button
+                    class="estado-btn"
+                    id="bomba-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'bomba',
+                            'Conforme'
+                        )
+                    "
+                >
+
+                    ✓ Conforme
+
+                </button>
+
+
+                <button
+                    class="estado-btn"
+                    id="bomba-no-conforme"
+                    onclick="
+                        seleccionarEstado(
+                            'bomba',
+                            'No conforme'
+                        )
+                    "
+                >
+
+                    ✕ No conforme
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- OBSERVACIONES -->
+
+        <div class="control-item">
+
+            <h3>
+                Observaciones
+            </h3>
+
+
+            <textarea
+                id="observaciones-tratamiento"
+                rows="4"
+                placeholder="Escriba aquí alguna observación..."
+            ></textarea>
+
+        </div>
+
+
+
+        <!-- RESULTADO -->
+
+        <div
+            id="resultado-tratamiento"
+            class="resultado-tratamiento"
+        >
+
+            Seleccione el estado de todas las etapas.
+
+        </div>
+
+
+
+        <!-- GUARDAR -->
+
+        <button
+            class="btn-principal btn-guardar"
+            onclick="guardarControlTratamiento()"
+        >
+
+            GUARDAR CONTROL
+
+        </button>
+
+
+    </section>
+
+    <!-- =====================================================
+     CONTROL DEL TANQUE
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-tanque"
+>
+
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Control del tanque de almacenamiento
+            </h2>
+
+            <p
+                id="informacion-lote-tanque"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarControlTanque()"
+        >
+
+            Volver
+
+        </button>
+
+    </div>
+
+
+    <!-- ESTADO INICIAL -->
+
+    <div class="control-item">
+
+        <h3>
+            Estado inicial del tanque
+        </h3>
+
+
+        <div class="estado-botones tanque-botones">
+
+            <button
+                class="estado-btn"
+                id="tanque-inicial-vacio"
+                onclick="seleccionarNivelTanque('inicial', 'Vacío')"
+            >
+                Vacío
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-inicial-bajo"
+                onclick="seleccionarNivelTanque('inicial', 'Bajo')"
+            >
+                Bajo
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-inicial-medio"
+                onclick="seleccionarNivelTanque('inicial', 'Medio')"
+            >
+                Medio
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-inicial-alto"
+                onclick="seleccionarNivelTanque('inicial', 'Alto')"
+            >
+                Alto
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-inicial-lleno"
+                onclick="seleccionarNivelTanque('inicial', 'Lleno')"
+            >
+                Lleno
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ESTADO FINAL -->
+
+    <div class="control-item">
+
+        <h3>
+            Estado final del tanque
+        </h3>
+
+
+        <div class="estado-botones tanque-botones">
+
+            <button
+                class="estado-btn"
+                id="tanque-final-vacio"
+                onclick="seleccionarNivelTanque('final', 'Vacío')"
+            >
+                Vacío
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-final-bajo"
+                onclick="seleccionarNivelTanque('final', 'Bajo')"
+            >
+                Bajo
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-final-medio"
+                onclick="seleccionarNivelTanque('final', 'Medio')"
+            >
+                Medio
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-final-alto"
+                onclick="seleccionarNivelTanque('final', 'Alto')"
+            >
+                Alto
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-final-lleno"
+                onclick="seleccionarNivelTanque('final', 'Lleno')"
+            >
+                Lleno
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- HORARIOS -->
+
+    <div class="control-item">
+
+        <h3>
+            Registro del llenado del tanque
+        </h3>
+
+
+        <div class="horas-tanque">
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora de inicio
+                </strong>
+
+                <div
+                    id="hora-inicio-tanque"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraInicioTanque()"
+                >
+
+                    Registrar inicio
+
+                </button>
+
+            </div>
+
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora final
+                </strong>
+
+                <div
+                    id="hora-final-tanque"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraFinalTanque()"
+                >
+
+                    Registrar final
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- LIMPIEZA -->
+
+    <div class="control-item">
+
+        <h3>
+            Limpieza del tanque
+        </h3>
+
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="limpieza-si"
+                onclick="seleccionarLimpiezaTanque('Sí')"
+            >
+
+                ✓ Sí, verificada
+
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="limpieza-no"
+                onclick="seleccionarLimpiezaTanque('No')"
+            >
+
+                ✕ No verificada
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TAPA -->
+
+    <div class="control-item">
+
+        <h3>
+            Condición de la tapa
+        </h3>
+
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="tapa-correcta"
+                onclick="seleccionarTapaTanque('Correcta')"
+            >
+
+                ✓ Correcta
+
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tapa-incorrecta"
+                onclick="seleccionarTapaTanque('Incorrecta')"
+            >
+
+                ✕ Incorrecta
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CONDICIÓN GENERAL -->
+
+    <div class="control-item">
+
+        <h3>
+            Condición general
+        </h3>
+
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="tanque-conforme"
+                onclick="seleccionarCondicionTanque('Conforme')"
+            >
+
+                ✓ Conforme
+
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="tanque-no-conforme"
+                onclick="seleccionarCondicionTanque('No conforme')"
+            >
+
+                ✕ No conforme
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <h3>
+            Observaciones
+        </h3>
+
+
+        <textarea
+            id="observaciones-tanque"
+            rows="4"
+            placeholder="Escriba aquí alguna observación..."
+        ></textarea>
+
+    </div>
+
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarControlTanque()"
+    >
+
+        GUARDAR CONTROL DEL TANQUE
+
+    </button>
+
+
+</section>
+
+<!-- =====================================================
+     CONTROL UV
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-uv"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Control de desinfección UV
+            </h2>
+
+            <p
+                id="informacion-lote-uv"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarControlUV()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+
+    <!-- ESTADO DE LA UV -->
+
+    <div class="control-item">
+
+        <h3>
+            Estado de la unidad UV
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="uv-encendida-si"
+                onclick="seleccionarUVEncendida('Sí')"
+            >
+                ✓ Encendida
+            </button>
+
+            <button
+                class="estado-btn"
+                id="uv-encendida-no"
+                onclick="seleccionarUVEncendida('No')"
+            >
+                ✕ No encendida
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INDICADOR -->
+
+    <div class="control-item">
+
+        <h3>
+            Indicador de funcionamiento
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="uv-indicador-normal"
+                onclick="seleccionarIndicadorUV('Normal')"
+            >
+                ✓ Normal
+            </button>
+
+            <button
+                class="estado-btn"
+                id="uv-indicador-alarma"
+                onclick="seleccionarIndicadorUV('Alarma')"
+            >
+                ✕ Alarma
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- LÁMPARA -->
+
+    <div class="control-item">
+
+        <h3>
+            Estado de la lámpara
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="uv-lampara-conforme"
+                onclick="seleccionarLamparaUV('Conforme')"
+            >
+                ✓ Conforme
+            </button>
+
+            <button
+                class="estado-btn"
+                id="uv-lampara-revision"
+                onclick="seleccionarLamparaUV('Requiere revisión')"
+            >
+                ✕ Requiere revisión
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CAMISA -->
+
+    <div class="control-item">
+
+        <h3>
+            Estado de la camisa de cuarzo
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="uv-camisa-conforme"
+                onclick="seleccionarCamisaUV('Conforme')"
+            >
+                ✓ Conforme
+            </button>
+
+            <button
+                class="estado-btn"
+                id="uv-camisa-limpieza"
+                onclick="seleccionarCamisaUV('Requiere limpieza')"
+            >
+                ✕ Requiere limpieza
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <h3>
+            Observaciones
+        </h3>
+
+        <textarea
+            id="observaciones-uv"
+            rows="4"
+            placeholder="Escriba aquí alguna observación..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarControlUV()"
+    >
+        GUARDAR CONTROL UV
+    </button>
+
+</section>
+
+<!-- =====================================================
+     PREPARACIÓN DE GARRAFONES
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-garrafones"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Preparación y desinfección de garrafones
+            </h2>
+
+            <p
+                id="informacion-lote-garrafones"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarPreparacionGarrafones()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+
+    <!-- CANTIDAD -->
+
+    <div class="control-item">
+
+        <h3>
+            Cantidad de garrafones
+        </h3>
+
+        <div class="contador-garrafones">
+
+            <button
+                class="contador-btn"
+                onclick="cambiarCantidadGarrafones(-1)"
+            >
+                −
+            </button>
+
+            <div
+                id="cantidad-garrafones"
+                class="cantidad-valor"
+            >
+                1
+            </div>
+
+            <button
+                class="contador-btn"
+                onclick="cambiarCantidadGarrafones(1)"
+            >
+                +
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- DESINFECTANTE -->
+
+    <div class="control-item">
+
+        <h3>
+            Desinfección del garrafón
+        </h3>
+
+        <div class="informacion-procedimiento">
+
+            <strong>
+                Dióxido de dicloro
+            </strong>
+
+            <p>
+                Dosis establecida:
+                <strong>2 gotas por garrafón</strong>
+            </p>
+
+            <p>
+                El procedimiento comprende:
+                aplicación del desinfectante,
+                primer lavado y enjuague,
+                desecho del agua,
+                segundo enjuague y
+                desecho del agua antes del llenado.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRIMER ENJUAGUE -->
+
+    <div class="control-item">
+
+        <h3>
+            Primer enjuague
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="garrafon-enjuague1-realizado"
+                onclick="seleccionarEnjuagueGarrafones(
+                    1,
+                    'Realizado'
+                )"
+            >
+                ✓ Realizado
+            </button>
+
+            <button
+                class="estado-btn"
+                id="garrafon-enjuague1-no-realizado"
+                onclick="seleccionarEnjuagueGarrafones(
+                    1,
+                    'No realizado'
+                )"
+            >
+                ✕ No realizado
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEGUNDO ENJUAGUE -->
+
+    <div class="control-item">
+
+        <h3>
+            Segundo enjuague
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="garrafon-enjuague2-realizado"
+                onclick="seleccionarEnjuagueGarrafones(
+                    2,
+                    'Realizado'
+                )"
+            >
+                ✓ Realizado
+            </button>
+
+            <button
+                class="estado-btn"
+                id="garrafon-enjuague2-no-realizado"
+                onclick="seleccionarEnjuagueGarrafones(
+                    2,
+                    'No realizado'
+                )"
+            >
+                ✕ No realizado
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INSPECCIÓN -->
+
+    <div class="control-item">
+
+        <h3>
+            Inspección final del garrafón
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="garrafon-inspeccion-conforme"
+                onclick="seleccionarInspeccionGarrafones(
+                    'Conforme'
+                )"
+            >
+                ✓ Conforme
+            </button>
+
+            <button
+                class="estado-btn"
+                id="garrafon-inspeccion-no-conforme"
+                onclick="seleccionarInspeccionGarrafones(
+                    'No conforme'
+                )"
+            >
+                ✕ No conforme
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TIEMPOS -->
+
+    <div class="control-item">
+
+        <h3>
+            Registro del tiempo de preparación
+        </h3>
+
+        <div class="horas-tanque">
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora de inicio
+                </strong>
+
+                <div
+                    id="hora-inicio-garrafones"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraInicioGarrafones()"
+                >
+                    Registrar inicio
+                </button>
+
+            </div>
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora final
+                </strong>
+
+                <div
+                    id="hora-final-garrafones"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraFinalGarrafones()"
+                >
+                    Registrar final
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <h3>
+            Observaciones
+        </h3>
+
+        <textarea
+            id="observaciones-garrafones"
+            rows="4"
+            placeholder="Escriba aquí alguna observación..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarPreparacionGarrafones()"
+    >
+        GUARDAR PREPARACIÓN
+    </button>
+
+</section>
+
+<!-- =====================================================
+     REGISTRO DE LLENADO
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-llenado"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Registro de llenado
+            </h2>
+
+            <p
+                id="informacion-lote-llenado"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarRegistroLlenado()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+
+    <!-- TIPO DE ENVASE -->
+
+    <div class="control-item">
+
+        <h3>
+            Tipo de envase
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="llenado-garrafon"
+                onclick="seleccionarTipoEnvase('Garrafón')"
+            >
+                Garrafón · 20 L
+            </button>
+
+            <button
+                class="estado-btn"
+                id="llenado-botella"
+                onclick="seleccionarTipoEnvase('Botella')"
+            >
+                Botella · 600 mL
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFORMACIÓN DEL ENVASE -->
+
+    <div class="control-item">
+
+        <h3>
+            Información del envase
+        </h3>
+
+        <div
+            id="informacion-envase"
+            class="informacion-procedimiento"
+        >
+            Seleccione el tipo de envase.
+        </div>
+
+    </div>
+
+
+    <!-- CRONÓMETRO -->
+
+    <div class="control-item">
+
+        <h3>
+            Tiempo de llenado
+        </h3>
+
+        <div
+            id="cronometro-llenado"
+            class="cronometro"
+        >
+            00:00
+        </div>
+
+
+        <div class="horas-tanque">
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora de inicio
+                </strong>
+
+                <div
+                    id="hora-inicio-llenado"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+                <button
+                    id="btn-inicio-llenado"
+                    class="btn-secundario"
+                    onclick="iniciarLlenado()"
+                >
+                    INICIAR LLENADO
+                </button>
+
+            </div>
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora final
+                </strong>
+
+                <div
+                    id="hora-final-llenado"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+                <button
+                    id="btn-final-llenado"
+                    class="btn-secundario"
+                    onclick="finalizarLlenado()"
+                    disabled
+                >
+                    FINALIZAR LLENADO
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FUGA -->
+
+    <div class="control-item">
+
+        <h3>
+            ¿Se presentó fuga?
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="llenado-fuga-si"
+                onclick="seleccionarFuga('Sí')"
+            >
+                Sí
+            </button>
+
+            <button
+                class="estado-btn"
+                id="llenado-fuga-no"
+                onclick="seleccionarFuga('No')"
+            >
+                No
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONDICIÓN -->
+
+    <div class="control-item">
+
+        <h3>
+            Condición del llenado
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="llenado-conforme"
+                onclick="seleccionarCondicionLlenado('Conforme')"
+            >
+                ✓ Conforme
+            </button>
+
+            <button
+                class="estado-btn"
+                id="llenado-no-conforme"
+                onclick="seleccionarCondicionLlenado('No conforme')"
+            >
+                ✕ No conforme
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <h3>
+            Observaciones
+        </h3>
+
+        <textarea
+            id="observaciones-llenado"
+            rows="4"
+            placeholder="Escriba aquí alguna observación..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarRegistroLlenado()"
+    >
+        GUARDAR REGISTRO DE LLENADO
+    </button>
+</section>
+
+
+
+<!-- =====================================================
+     CONTROL DE CALIDAD
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-calidad"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Control de calidad del agua
+            </h2>
+
+            <p
+                id="informacion-lote-calidad"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarControlCalidad()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+    <!-- PUNTO DE MUESTREO -->
+
+<div class="control-item">
+
+    <h3>
+        Punto de muestreo
+    </h3>
+
+    <div class="informacion-procedimiento">
+
+        Agua tratada para consumo
+
+    </div>
+
+</div>
+
+
+<!-- MOMENTO DEL MUESTREO -->
+
+<div class="control-item">
+
+    <h3>
+        Momento del muestreo respecto al lavado del tanque
+    </h3>
+
+    <div class="estado-botones">
+
+        <button
+            class="estado-btn"
+            id="calidad-momento-2dias"
+            onclick="seleccionarMomentoMuestreo(
+                '2 días después del lavado del tanque'
+            )"
+        >
+            2 días después
+        </button>
+
+
+        <button
+            class="estado-btn"
+            id="calidad-momento-1mes"
+            onclick="seleccionarMomentoMuestreo(
+                '1 mes después del lavado del tanque'
+            )"
+        >
+            1 mes después
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- pH -->
+
+<div class="control-item">
+
+    <h3>
+        pH
+    </h3>
+
+    <input
+        id="calidad-ph"
+        type="number"
+        step="0.01"
+        placeholder="Ej. 6.9"
+    >
+
+</div>
+
+
+<!-- CUMPLIMIENTO -->
+
+<div class="control-item">
+
+    <h3>
+        Cumplimiento del control
+    </h3>
+
+    <div class="estado-botones">
+
+        <button
+            class="estado-btn"
+            id="calidad-cumple"
+            onclick="seleccionarCumplimiento('Cumple')"
+        >
+            ✓ Cumple
+        </button>
+
+
+        <button
+            class="estado-btn"
+            id="calidad-no-cumple"
+            onclick="seleccionarCumplimiento('No cumple')"
+        >
+            ✕ No cumple
+        </button>
+
+
+        <button
+            class="estado-btn"
+            id="calidad-pendiente"
+            onclick="seleccionarCumplimiento('Pendiente')"
+        >
+            ⏳ Pendiente
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- OBSERVACIONES -->
+
+<div class="control-item">
+
+    <h3>
+        Observaciones
+    </h3>
+
+    <textarea
+        id="observaciones-calidad"
+        rows="4"
+        placeholder="Escriba aquí alguna observación..."
+    ></textarea>
+
+</div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarControlCalidad()"
+    >
+
+        GUARDAR CONTROL DE CALIDAD
+
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+     LIMPIEZA Y DESINFECCIÓN
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-limpieza"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>
+                Limpieza
+            </h2>
+
+            <p
+                id="informacion-lote-limpieza"
+                class="texto-ayuda"
+            ></p>
+
+        </div>
+
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarLimpiezaDesinfeccion()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+
+   
+
+
+    <!-- ELEMENTO -->
+
+    <div class="control-item">
+
+        <h3>
+            Elemento intervenido
+        </h3>
+
+        <select id="limpieza-elemento">
+
+            <option value="">
+                Seleccione un elemento
+            </option>
+
+            <option value="Tanque de 1000 L">
+                Tanque de 1000 L
+            </option>
+
+            <option value="Garrafón de 20 L">
+                Garrafón de 20 L
+            </option>
+
+            <option value="Utensilios o equipos">
+                Utensilios o equipos
+            </option>
+
+            <option value="Área de trabajo">
+                Área de trabajo
+            </option>
+
+            <option value="Otro">
+                Otro
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- PRODUCTO -->
+
+    <div class="control-item">
+
+        <h3>
+            Producto utilizado
+        </h3>
+
+        <input
+            id="limpieza-producto"
+            type="text"
+            placeholder="Ingrese el producto realmente utilizado"
+        >
+
+        <p class="texto-ayuda">
+
+            Registre el nombre del producto utilizado
+            durante la actividad.
+
+        </p>
+
+    </div>
+
+
+    <!-- DOSIS -->
+
+    <div class="control-item">
+
+        <h3>
+            Dosis o cantidad utilizada
+        </h3>
+
+        <input
+            id="limpieza-dosis"
+            type="text"
+            placeholder="Ej. 2 gotas por garrafón, 50 mL, etc."
+        >
+
+        <p class="texto-ayuda">
+
+            Registre la cantidad o dosis aplicada,
+            cuando corresponda.
+
+        </p>
+
+    </div>
+
+
+    <!-- HORAS -->
+
+    <div class="control-item">
+
+        <h3>
+            Tiempo de la actividad
+        </h3>
+
+
+        <div class="horas-grid">
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora de inicio
+                </strong>
+
+                <div
+                    id="hora-inicio-limpieza"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraInicioLimpieza()"
+                >
+                    Registrar inicio
+                </button>
+
+            </div>
+
+
+
+            <div class="hora-bloque">
+
+                <strong>
+                    Hora final
+                </strong>
+
+                <div
+                    id="hora-final-limpieza"
+                    class="hora-registrada"
+                >
+                    No registrada
+                </div>
+
+
+                <button
+                    class="btn-secundario"
+                    onclick="registrarHoraFinalLimpieza()"
+                >
+                    Registrar final
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULTADO -->
+
+    <div class="control-item">
+
+        <h3>
+            Resultado de la actividad
+        </h3>
+
+        <div class="estado-botones">
+
+            <button
+                class="estado-btn"
+                id="limpieza-conforme"
+                onclick="seleccionarResultadoLimpieza('Conforme')"
+            >
+                ✓ Conforme
+            </button>
+
+
+            <button
+                class="estado-btn"
+                id="limpieza-no-conforme"
+                onclick="seleccionarResultadoLimpieza('No conforme')"
+            >
+                ✕ No conforme
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <h3>
+            Observaciones
+        </h3>
+
+        <textarea
+            id="observaciones-limpieza"
+            rows="4"
+            placeholder="Escriba aquí alguna observación..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        class="btn-principal btn-guardar"
+        onclick="guardarLimpieza()"
+    >
+
+        GUARDAR REGISTRO DE LIMPIEZA
+
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+     MÓDULO DE MANTENIMIENTO
+     ===================================================== -->
+
+<section
+    class="panel oculto"
+    id="panel-mantenimiento"
+>
+
+    <div class="cabecera-modulo">
+
+        <div>
+
+            <h2>Mantenimiento de equipos</h2>
+
+            <p class="texto-ayuda">
+                Registro de intervenciones, tiempos,
+                estado de los equipos y programación
+                de próximos mantenimientos.
+            </p>
+
+        </div>
+
+        <button
+            class="btn-secundario"
+            onclick="cerrarMantenimiento()"
+        >
+            Volver
+        </button>
+
+    </div>
+
+
+    <!-- FECHA -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-fecha">
+            Fecha de realización
+        </label>
+
+        <input
+            id="mantenimiento-fecha"
+            type="date"
+            required
+        >
+
+    </div>
+
+
+    <!-- EQUIPO -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-equipo">
+            Equipo o elemento intervenido
+        </label>
+
+        <select id="mantenimiento-equipo" required>
+
+            <option value="">
+                Seleccione el equipo
+            </option>
+
+            <option value="Filtro de sedimentos">
+                Filtro de sedimentos
+            </option>
+
+            <option value="Filtro de carbón activado">
+                Filtro de carbón activado
+            </option>
+
+            <option value="Resina catiónica SAC">
+                Resina catiónica SAC
+            </option>
+
+            <option value="Membranas de ósmosis inversa">
+                Membranas de ósmosis inversa
+            </option>
+
+            <option value="Bomba de alimentación">
+                Bomba de alimentación
+            </option>
+
+            <option value="Unidad UV / lámpara">
+                Unidad UV / lámpara
+            </option>
+
+            <option value="Camisa de cuarzo UV">
+                Camisa de cuarzo UV
+            </option>
+
+            <option value="Tanque de almacenamiento">
+                Tanque de almacenamiento
+            </option>
+
+            <option value="Tuberías y conexiones">
+                Tuberías y conexiones
+            </option>
+
+            <option value="Sistema de llenado">
+                Sistema de llenado
+            </option>
+
+            <option value="Otro">
+                Otro
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- ESPECIFICACIÓN DEL EQUIPO -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-equipo-detalle">
+            Nombre o detalle adicional del equipo
+            (si seleccionó «Otro»)
+        </label>
+
+        <input
+            id="mantenimiento-equipo-detalle"
+            type="text"
+            placeholder="Especifique el equipo"
+        >
+
+    </div>
+
+
+    <!-- TIPO DE MANTENIMIENTO -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-tipo">
+            Tipo de intervención
+        </label>
+
+        <select id="mantenimiento-tipo" required>
+
+            <option value="">
+                Seleccione el tipo
+            </option>
+
+            <option value="Preventivo">
+                Preventivo
+            </option>
+
+            <option value="Correctivo">
+                Correctivo
+            </option>
+
+            <option value="Inspección">
+                Inspección o diagnóstico
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- DESCRIPCIÓN -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-descripcion">
+            Trabajo realizado
+        </label>
+
+        <textarea
+            id="mantenimiento-descripcion"
+            rows="4"
+            placeholder="Describa la inspección, ajuste, reparación o sustitución realizada..."
+            required
+        ></textarea>
+
+    </div>
+
+
+    <!-- MATERIALES -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-materiales">
+            Repuestos y materiales utilizados
+        </label>
+
+        <textarea
+            id="mantenimiento-materiales"
+            rows="3"
+            placeholder="Indique las piezas o materiales utilizados. Si no aplica, déjelo vacío."
+        ></textarea>
+
+    </div>
+
+
+    <!-- CONTROL DEL TIEMPO -->
+
+    <div class="control-item">
+
+        <h3>Tiempo de intervención</h3>
+
+        <p>
+            Hora de inicio:
+            <strong id="hora-inicio-mantenimiento">
+                No registrada
+            </strong>
+        </p>
+
+        <button
+            type="button"
+            id="btn-inicio-mantenimiento"
+            class="btn-secundario"
+            onclick="iniciarTiempoMantenimiento()"
+        >
+            Registrar inicio
+        </button>
+
+
+        <p>
+            Hora de finalización:
+            <strong id="hora-final-mantenimiento">
+                No registrada
+            </strong>
+        </p>
+
+        <button
+            type="button"
+            id="btn-final-mantenimiento"
+            class="btn-secundario"
+            onclick="finalizarTiempoMantenimiento()"
+            disabled
+        >
+            Registrar finalización
+        </button>
+
+
+        <p>
+            Duración:
+            <strong id="cronometro-mantenimiento">
+                00:00:00
+            </strong>
+        </p>
+
+    </div>
+
+
+    <!-- ESTADO FINAL -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-estado-final">
+            Estado del equipo después de intervenirlo
+        </label>
+
+        <select
+            id="mantenimiento-estado-final"
+            required
+        >
+
+            <option value="">
+                Seleccione el estado
+            </option>
+
+            <option value="Operativo">
+                Operativo
+            </option>
+
+            <option value="Operativo con observaciones">
+                Operativo con observaciones
+            </option>
+
+            <option value="Fuera de servicio">
+                Fuera de servicio
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- PRÓXIMO MANTENIMIENTO -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-proximo">
+            Fecha del próximo mantenimiento
+        </label>
+
+        <input
+            id="mantenimiento-proximo"
+            type="date"
+        >
+
+        <p class="texto-ayuda">
+            Campo opcional. Registre aquí la fecha
+            que corresponda según el criterio técnico
+            del laboratorio.
+        </p>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+
+    <div class="control-item">
+
+        <label for="mantenimiento-observaciones">
+            Observaciones
+        </label>
+
+        <textarea
+            id="mantenimiento-observaciones"
+            rows="3"
+            placeholder="Anote las novedades o recomendaciones pendientes..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- GUARDAR -->
+
+    <button
+        type="button"
+        class="btn-principal btn-guardar"
+        onclick="guardarMantenimiento()"
+    >
+        GUARDAR MANTENIMIENTO
+    </button>
+
+
+    <!-- HISTORIAL -->
+
+    <div class="control-item">
+
+        <h3>Historial de mantenimientos</h3>
+
+        <p class="texto-ayuda">
+            Consulte las intervenciones registradas
+            y revise las fechas de las próximas actividades.
+        </p>
+
+        <button
+            type="button"
+            class="btn-secundario"
+            onclick="cargarMantenimientos()"
+        >
+            Actualizar historial
+        </button>
+
+
+        <div class="tabla-contenedor">
+
+            <table class="tabla-mantenimientos">
+
+                <thead>
+
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Equipo</th>
+                        <th>Tipo</th>
+                        <th>Operador</th>
+                        <th>Duración</th>
+                        <th>Estado del equipo</th>
+                        <th>Próxima fecha</th>
+                        <th>Programación</th>
+                        <th>Detalle</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="filas-mantenimientos">
+
+                    <tr>
+                        <td colspan="9">
+                            Todavía no se ha cargado
+                            el historial.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- =====================================================
+     PEDIDOS DE LAS OFICINAS
+     ===================================================== -->
+
+<!-- =====================================================
+     PEDIDOS DE LAS OFICINAS: VISTA INTERNA
+     ===================================================== -->
+
+<section
+    class="panel"
+    id="panel-pedidos"
+>
+
+    <h2>Pedidos de las oficinas</h2>
+
+        <div class="control-item bloque-exportacion-excel">
+            <h3>Exportación de registros</h3>
+            <p class="texto-ayuda">
+                Descargue un libro Excel con los datos guardados en todos los módulos.
+                Incluye también los pedidos finalizados que ya no aparecen en la tabla principal.
+            </p>
+            <button
+                type="button"
+                class="btn-principal btn-guardar"
+                onclick="window.location.href='/api/exportar-excel'"
+            >
+                DESCARGAR EXCEL ACTUALIZADO
+            </button>
+        </div>
+
+
+
+    <p class="texto-ayuda">
+        Consulte los pedidos recibidos y actualice su estado
+        durante la preparación y entrega.
+    </p>
+
+    <button
+        type="button"
+        class="btn-secundario"
+        onclick="cargarPedidos()"
+    >
+        ACTUALIZAR HISTORIAL
+    </button>
+
+    <div class="tabla-contenedor">
+
+        <table class="tabla-pedidos">
+
+            <thead>
+
+                <tr>
+                    <th>Fecha de solicitud</th>
+                    <th>Oficina</th>
+                    <th>Solicitante</th>
+                    <th>Garrafones</th>
+                    <th>Botellas</th>
+                    <th>Observaciones</th>
+                    <th>Estado actual</th>
+                    <th>Actualizar estado</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="filas-pedidos">
+
+                <tr>
+                    <td colspan="8">
+                        Cargando pedidos...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- MODAL OPERADOR -->
+
+<div
+    id="modal-operador"
+    class="modal oculto"
+>
+
+
+    <div class="modal-contenido">
+
+
+        <h2>
+            Registrar operador
+        </h2>
+
+
+        <label for="nombre-operador">
+
+            Nombre del operador
+
+        </label>
+
+
+        <input
+            id="nombre-operador"
+            type="text"
+            placeholder="Ej. Carlos Rodríguez"
+        >
+
+
+        <div class="modal-botones">
+
+
+            <button
+                class="btn-secundario"
+                onclick="cerrarRegistroOperador()"
+            >
+
+                Cancelar
+
+            </button>
+
+
+            <button
+                class="btn-principal"
+                onclick="guardarOperador()"
+            >
+
+                Guardar
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================================
+   VARIABLES PRINCIPALES
+   ========================================================= */
+
+
+let loteActivoId = null;
+
+
+let estadosTratamiento = {
+
+    sedimentos: null,
+
+    carbon_activado: null,
+
+    resina_sac: null,
+
+    osmosis_inversa: null,
+
+    bomba: null
+
+};
+
+let controlTanque = {
+
+    estado_inicial: null,
+
+    estado_final: null,
+
+    hora_inicio: "",
+
+    hora_final: "",
+
+    limpieza_verificada: null,
+
+    tapa: null,
+
+    condicion_general: null
+
+};
+
+let controlUV = {
+    uv_encendida: null,
+    indicador_funcionamiento: null,
+    estado_lampara: null,
+    estado_camisa: null
+};
+
+let preparacionGarrafones = {
+
+    cantidad_garrafones: 1,
+
+    enjuague_1: null,
+
+    enjuague_2: null,
+
+    inspeccion_final: null,
+
+    hora_inicio: "",
+
+    hora_final: ""
+
+};
+
+let registroLlenado = {
+
+    tipo_envase: null,
+
+    hora_inicio: "",
+
+    hora_final: "",
+
+    fuga: null,
+
+    condicion_llenado: null
+
+};
+
+let controlCalidad = {
+
+    momento_muestreo: null,
+
+    cumplimiento: null
+
+};
+
+let controlLimpieza = {
+    resultado: null,
+    hora_inicio: "",
+    hora_final: ""
+};
+
+
+let intervaloCronometro = null;
+
+let inicioCronometro = null;
+
+
+/* =========================================================
+   LIMPIEZA Y DESINFECCIÓN
+   ========================================================= */
+
+
+function abrirLimpiezaDesinfeccion() {
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("panel-limpieza")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+/* =========================================================
+   CERRAR MÓDULO
+   ========================================================= */
+
+
+function cerrarLimpiezaDesinfeccion() {
+
+    document
+        .getElementById("panel-limpieza")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+
+/* =========================================================
+   HORA DE INICIO
+   ========================================================= */
+
+
+function registrarHoraInicioLimpieza() {
+
+    const hora =
+        formatoHora(
+            new Date()
+        );
+
+
+    controlLimpieza.hora_inicio =
+        hora;
+
+
+    document
+        .getElementById(
+            "hora-inicio-limpieza"
+        )
+        .textContent =
+            hora;
+
+}
+
+
+
+/* =========================================================
+   HORA FINAL
+   ========================================================= */
+
+
+function registrarHoraFinalLimpieza() {
+
+    if (
+        !controlLimpieza.hora_inicio
+    ) {
+
+        alert(
+            "Primero registre la hora de inicio."
+        );
+
+        return;
+
+    }
+
+
+    const hora =
+        formatoHora(
+            new Date()
+        );
+
+
+    controlLimpieza.hora_final =
+        hora;
+
+
+    document
+        .getElementById(
+            "hora-final-limpieza"
+        )
+        .textContent =
+            hora;
+
+}
+
+
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+
+function seleccionarResultadoLimpieza(
+    valor
+) {
+
+    controlLimpieza.resultado =
+        valor;
+
+
+    document
+        .getElementById(
+            "limpieza-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById(
+            "limpieza-no-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    if (
+        valor === "Conforme"
+    ) {
+
+        document
+            .getElementById(
+                "limpieza-conforme"
+            )
+            .classList
+            .add("seleccionado");
+
+    }
+
+    else {
+
+        document
+            .getElementById(
+                "limpieza-no-conforme"
+            )
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+
+/* =========================================================
+   GUARDAR LIMPIEZA
+   ========================================================= */
+
+
+async function guardarLimpieza() {
+
+    const operador =
+        document
+        .getElementById("operador")
+        .value;
+
+
+    if (!operador) {
+
+        alert(
+            "Primero debe seleccionar un operador."
+        );
+
+        return;
+
+    }
+
+
+    const elemento =
+        document
+        .getElementById(
+            "limpieza-elemento"
+        )
+        .value;
+
+
+
+    const observaciones =
+        document
+        .getElementById(
+            "observaciones-limpieza"
+        )
+        .value
+        .trim();
+
+
+
+    if (
+        elemento === "" ||
+        controlLimpieza.hora_inicio === "" ||
+        controlLimpieza.hora_final === "" ||
+        controlLimpieza.resultado === null
+    ) {
+        alert(
+            "Debe completar el elemento intervenido, las horas y el resultado."
+        );
+        return;
+    }
+
+
+
+    const datos = {
+    operador_id: Number(operador),
+
+    lote_id: loteActivoId
+        ? Number(loteActivoId)
+        : null,
+
+    elemento: elemento,
+
+    hora_inicio:
+        controlLimpieza.hora_inicio,
+
+    hora_final:
+        controlLimpieza.hora_final,
+
+    resultado:
+        controlLimpieza.resultado,
+
+    observaciones: observaciones
+};
+
+
+
+    const respuesta =
+        await fetch(
+            "/api/limpieza",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify(datos)
+
+            }
+        );
+
+
+
+    const resultado =
+        await respuesta.json();
+
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el registro de limpieza."
+        );
+
+        return;
+
+    }
+
+
+
+    alert(
+        "Registro de limpieza guardado correctamente."
+        +
+        "\n\n"
+        +
+        "Tiempo de actividad: "
+        +
+        resultado.tiempo_segundos
+        +
+        " segundos."
+    );
+
+
+
+    /* =====================================================
+       LIMPIAR FORMULARIO
+       ===================================================== */
+
+
+    controlLimpieza = {
+    resultado: null,
+    hora_inicio: "",
+    hora_final: ""
+};
+
+
+
+    document
+        .getElementById(
+            "limpieza-elemento"
+        )
+        .value =
+            "";
+
+
+
+    document
+        .getElementById(
+            "observaciones-limpieza"
+        )
+        .value =
+            "";
+
+
+
+    document
+        .getElementById(
+            "hora-inicio-limpieza"
+        )
+        .textContent =
+            "No registrada";
+
+
+
+    document
+        .getElementById(
+            "hora-final-limpieza"
+        )
+        .textContent =
+            "No registrada";
+
+
+
+    document
+        .querySelectorAll(
+            "#panel-limpieza .estado-btn"
+        )
+        .forEach(
+
+            boton =>
+
+                boton.classList.remove(
+                    "seleccionado"
+                )
+
+        );
+
+}
+
+/* =========================================================
+   CARGAR OPERADORES
+   ========================================================= */
+
+
+async function cargarOperadores() {
+
+
+    const respuesta =
+        await fetch("/api/operadores");
+
+
+    const operadores =
+        await respuesta.json();
+
+
+    const select =
+        document.getElementById("operador");
+
+
+    select.innerHTML =
+        '<option value="">Seleccione un operador</option>';
+
+
+    operadores.forEach(op => {
+
+
+        const option =
+            document.createElement("option");
+
+
+        option.value = op.id;
+
+
+        option.textContent = op.nombre;
+
+
+        select.appendChild(option);
+
+
+    });
+
+
+}
+
+
+
+/* =========================================================
+   MODAL DE OPERADOR
+   ========================================================= */
+
+
+function abrirRegistroOperador() {
+
+
+    document
+        .getElementById("modal-operador")
+        .classList
+        .remove("oculto");
+
+
+    document
+        .getElementById("nombre-operador")
+        .focus();
+
+
+}
+
+
+
+function cerrarRegistroOperador() {
+
+
+    document
+        .getElementById("modal-operador")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("nombre-operador")
+        .value = "";
+
+
+}
+
+
+
+/* =========================================================
+   GUARDAR OPERADOR
+   ========================================================= */
+
+
+async function guardarOperador() {
+
+
+    const nombre =
+        document
+        .getElementById("nombre-operador")
+        .value
+        .trim();
+
+
+    if (!nombre) {
+
+        alert(
+            "Debe escribir el nombre del operador."
+        );
+
+        return;
+
+    }
+
+
+    const respuesta =
+        await fetch(
+            "/api/operadores",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    nombre: nombre
+                })
+
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo registrar el operador."
+        );
+
+        return;
+
+    }
+
+
+    cerrarRegistroOperador();
+
+
+    await cargarOperadores();
+
+
+    const selectorOperador = document.getElementById(
+    "operador"
+);
+
+if (!selectorOperador.disabled) {
+
+    selectorOperador.value = resultado.id;
+
+}
+
+
+    document
+        .getElementById("mensaje-operador")
+        .textContent =
+            "Operador registrado correctamente.";
+
+}
+
+
+
+/* =========================================================
+   CREAR LOTE
+   ========================================================= */
+
+
+async function crearLote() {
+
+
+    const operador =
+        document
+        .getElementById("operador")
+        .value;
+
+
+    if (!operador) {
+
+        alert(
+            "Primero seleccione un operador."
+        );
+
+        return;
+
+    }
+
+
+    const respuesta =
+        await fetch(
+            "/api/lotes",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    operador_id:
+                        Number(operador)
+                })
+
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo crear el lote."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Guardamos el ID interno del lote.
+       Esto permite que todos los módulos
+       posteriores sepan a qué lote pertenecen.
+    */
+
+    loteActivoId =
+        resultado.id;
+
+
+    document
+        .getElementById("lote-creado")
+        .textContent =
+            "Lote activo: " +
+            resultado.codigo;
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+
+    document
+        .getElementById("btn-lote")
+        .disabled = true;
+
+
+}
+
+
+
+/* =========================================================
+   ABRIR CONTROL DE TRATAMIENTO
+   ========================================================= */
+
+
+function abrirControlTratamiento() {
+
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+
+    }
+
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+
+    document
+        .getElementById("informacion-lote")
+        .textContent =
+            codigoLote;
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("panel-tratamiento")
+        .classList
+        .remove("oculto");
+
+
+}
+
+
+
+/* =========================================================
+   CERRAR CONTROL DE TRATAMIENTO
+   ========================================================= */
+
+
+function cerrarControlTratamiento() {
+
+
+    document
+        .getElementById("panel-tratamiento")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+
+}
+
+
+
+/* =========================================================
+   SELECCIONAR CONFORME / NO CONFORME
+   ========================================================= */
+
+
+function seleccionarEstado(
+    campo,
+    valor
+) {
+
+
+    estadosTratamiento[campo] =
+        valor;
+
+
+    const botonConforme =
+        document.getElementById(
+            campo + "-conforme"
+        );
+
+
+    const botonNoConforme =
+        document.getElementById(
+            campo + "-no-conforme"
+        );
+
+
+    botonConforme.classList.remove(
+        "seleccionado"
+    );
+
+
+    botonNoConforme.classList.remove(
+        "seleccionado"
+    );
+
+
+    if (valor === "Conforme") {
+
+        botonConforme.classList.add(
+            "seleccionado"
+        );
+
+    }
+    else {
+
+        botonNoConforme.classList.add(
+            "seleccionado"
+        );
+
+    }
+
+
+    actualizarResultadoVisual();
+
+}
+
+
+
+/* =========================================================
+   MOSTRAR RESULTADO EN PANTALLA
+   ========================================================= */
+
+
+function actualizarResultadoVisual() {
+
+
+    const valores =
+        Object.values(
+            estadosTratamiento
+        );
+
+
+    const completos =
+        valores.every(
+            valor => valor !== null
+        );
+
+
+    const resultado =
+        document.getElementById(
+            "resultado-tratamiento"
+        );
+
+
+    if (!completos) {
+
+        resultado.className =
+            "resultado-tratamiento";
+
+
+        resultado.textContent =
+            "Seleccione el estado de todas las etapas.";
+
+        return;
+
+    }
+
+
+    const todoConforme =
+        valores.every(
+            valor => valor === "Conforme"
+        );
+
+
+    if (todoConforme) {
+
+        resultado.className =
+            "resultado-tratamiento resultado-ok";
+
+
+        resultado.textContent =
+            "Resultado general: CONFORME";
+
+    }
+    else {
+
+        resultado.className =
+            "resultado-tratamiento resultado-no";
+
+
+        resultado.textContent =
+            "Resultado general: NO CONFORME";
+
+    }
+
+
+}
+
+
+
+/* =========================================================
+   GUARDAR CONTROL DEL TRATAMIENTO
+   ========================================================= */
+
+
+async function guardarControlTratamiento() {
+
+
+    if (!loteActivoId) {
+
+        alert(
+            "No existe un lote activo."
+        );
+
+        return;
+
+    }
+
+
+    const valores =
+        Object.values(
+            estadosTratamiento
+        );
+
+
+    const completos =
+        valores.every(
+            valor => valor !== null
+        );
+
+
+    if (!completos) {
+
+        alert(
+            "Debe seleccionar el estado de todas las etapas."
+        );
+
+        return;
+
+    }
+
+
+    const observaciones =
+        document
+        .getElementById(
+            "observaciones-tratamiento"
+        )
+        .value
+        .trim();
+
+
+    const respuesta =
+        await fetch(
+            `/api/lotes/${loteActivoId}/tratamiento`,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    sedimentos:
+                        estadosTratamiento.sedimentos,
+
+                    carbon_activado:
+                        estadosTratamiento.carbon_activado,
+
+                    resina_sac:
+                        estadosTratamiento.resina_sac,
+
+                    osmosis_inversa:
+                        estadosTratamiento.osmosis_inversa,
+
+                    bomba:
+                        estadosTratamiento.bomba,
+
+                    observaciones:
+                        observaciones
+
+                })
+
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el control."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Control del tratamiento guardado correctamente."
+    );
+
+
+    estadosTratamiento = {
+
+        sedimentos: null,
+
+        carbon_activado: null,
+
+        resina_sac: null,
+
+        osmosis_inversa: null,
+
+        bomba: null
+
+    };
+
+
+    document
+        .getElementById(
+            "observaciones-tratamiento"
+        )
+        .value = "";
+
+
+    document
+        .querySelectorAll(".estado-btn")
+        .forEach(
+            boton =>
+                boton.classList.remove(
+                    "seleccionado"
+                )
+        );
+
+
+    document
+        .getElementById(
+            "resultado-tratamiento"
+        )
+        .className =
+            "resultado-tratamiento";
+
+
+    document
+        .getElementById(
+            "resultado-tratamiento"
+        )
+        .textContent =
+            "Control guardado correctamente.";
+
+
+}
+
+/* =========================================================
+   CONTROL DEL TANQUE
+   ========================================================= */
+
+
+function abrirControlTanque() {
+
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+
+    }
+
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+
+    document
+        .getElementById(
+            "informacion-lote-tanque"
+        )
+        .textContent =
+            codigoLote;
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("panel-tanque")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+function cerrarControlTanque() {
+
+
+    document
+        .getElementById("panel-tanque")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+/* =========================================================
+   NIVEL DEL TANQUE
+   ========================================================= */
+
+
+function seleccionarNivelTanque(
+    tipo,
+    valor
+) {
+
+
+    if (tipo === "inicial") {
+
+        controlTanque.estado_inicial =
+            valor;
+
+    }
+    else {
+
+        controlTanque.estado_final =
+            valor;
+
+    }
+
+
+    const niveles = [
+        "Vacío",
+        "Bajo",
+        "Medio",
+        "Alto",
+        "Lleno"
+    ];
+
+
+    niveles.forEach(
+        nivel => {
+
+            const boton =
+                document.getElementById(
+                    "tanque-" +
+                    tipo +
+                    "-" +
+                    nivel
+                        .toLowerCase()
+                        .replace("í", "i")
+                );
+
+
+            if (boton) {
+
+                boton.classList.remove(
+                    "seleccionado"
+                );
+
+            }
+
+        }
+    );
+
+
+    const idBoton =
+        "tanque-" +
+        tipo +
+        "-" +
+        valor
+            .toLowerCase()
+            .replace("í", "i");
+
+
+    const botonSeleccionado =
+        document.getElementById(
+            idBoton
+        );
+
+
+    if (botonSeleccionado) {
+
+        botonSeleccionado.classList.add(
+            "seleccionado"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   HORAS
+   ========================================================= */
+
+
+function obtenerHoraActual() {
+
+    const ahora =
+        new Date();
+
+
+    return ahora.toLocaleTimeString(
+        "es-CO",
+        {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+        }
+    );
+
+}
+
+
+
+function registrarHoraInicioTanque() {
+
+    const hora =
+        obtenerHoraActual();
+
+
+    controlTanque.hora_inicio =
+        hora;
+
+
+    document
+        .getElementById(
+            "hora-inicio-tanque"
+        )
+        .textContent =
+            hora;
+
+}
+
+
+
+function registrarHoraFinalTanque() {
+
+    const hora =
+        obtenerHoraActual();
+
+
+    controlTanque.hora_final =
+        hora;
+
+
+    document
+        .getElementById(
+            "hora-final-tanque"
+        )
+        .textContent =
+            hora;
+
+}
+
+
+
+/* =========================================================
+   LIMPIEZA
+   ========================================================= */
+
+
+function seleccionarLimpiezaTanque(
+    valor
+) {
+
+
+    controlTanque.limpieza_verificada =
+        valor;
+
+
+    document
+        .getElementById("limpieza-si")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("limpieza-no")
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Sí") {
+
+        document
+            .getElementById("limpieza-si")
+            .classList
+            .add("seleccionado");
+
+    }
+    else {
+
+        document
+            .getElementById("limpieza-no")
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+
+/* =========================================================
+   TAPA
+   ========================================================= */
+
+
+function seleccionarTapaTanque(
+    valor
+) {
+
+
+    controlTanque.tapa =
+        valor;
+
+
+    document
+        .getElementById("tapa-correcta")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("tapa-incorrecta")
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Correcta") {
+
+        document
+            .getElementById("tapa-correcta")
+            .classList
+            .add("seleccionado");
+
+    }
+    else {
+
+        document
+            .getElementById("tapa-incorrecta")
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CONDICIÓN GENERAL
+   ========================================================= */
+
+
+function seleccionarCondicionTanque(
+    valor
+) {
+
+
+    controlTanque.condicion_general =
+        valor;
+
+
+    document
+        .getElementById("tanque-conforme")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("tanque-no-conforme")
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Conforme") {
+
+        document
+            .getElementById("tanque-conforme")
+            .classList
+            .add("seleccionado");
+
+    }
+    else {
+
+        document
+            .getElementById("tanque-no-conforme")
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+
+/* =========================================================
+   GUARDAR CONTROL DEL TANQUE
+   ========================================================= */
+
+
+async function guardarControlTanque() {
+
+
+    if (!loteActivoId) {
+
+        alert(
+            "No existe un lote activo."
+        );
+
+        return;
+
+    }
+
+
+    const camposCompletos =
+
+        controlTanque.estado_inicial !== null &&
+
+        controlTanque.estado_final !== null &&
+
+        controlTanque.hora_inicio !== "" &&
+
+        controlTanque.hora_final !== "" &&
+
+        controlTanque.limpieza_verificada !== null &&
+
+        controlTanque.tapa !== null &&
+
+        controlTanque.condicion_general !== null;
+
+
+    if (!camposCompletos) {
+
+        alert(
+            "Debe completar todos los campos del control del tanque."
+        );
+
+        return;
+
+    }
+
+
+    const observaciones =
+        document
+        .getElementById(
+            "observaciones-tanque"
+        )
+        .value
+        .trim();
+
+
+    const datos = {
+
+        estado_inicial:
+            controlTanque.estado_inicial,
+
+        estado_final:
+            controlTanque.estado_final,
+
+        hora_inicio:
+            controlTanque.hora_inicio,
+
+        hora_final:
+            controlTanque.hora_final,
+
+        limpieza_verificada:
+            controlTanque.limpieza_verificada,
+
+        tapa:
+            controlTanque.tapa,
+
+        condicion_general:
+            controlTanque.condicion_general,
+
+        observaciones:
+            observaciones
+
+    };
+
+
+    const respuesta =
+        await fetch(
+            `/api/lotes/${loteActivoId}/tanque`,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(datos)
+
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el control del tanque."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Control del tanque guardado correctamente."
+    );
+
+
+    controlTanque = {
+
+        estado_inicial: null,
+
+        estado_final: null,
+
+        hora_inicio: "",
+
+        hora_final: "",
+
+        limpieza_verificada: null,
+
+        tapa: null,
+
+        condicion_general: null
+
+    };
+
+
+    document
+        .getElementById(
+            "observaciones-tanque"
+        )
+        .value = "";
+
+
+    document
+        .querySelectorAll(
+            "#panel-tanque .estado-btn"
+        )
+        .forEach(
+            boton =>
+                boton.classList.remove(
+                    "seleccionado"
+                )
+        );
+
+
+    document
+        .getElementById(
+            "hora-inicio-tanque"
+        )
+        .textContent =
+            "No registrada";
+
+
+    document
+        .getElementById(
+            "hora-final-tanque"
+        )
+        .textContent =
+            "No registrada";
+
+}
+
+/* =========================================================
+   CONTROL UV
+   ========================================================= */
+
+
+function abrirControlUV() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+    }
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+    document
+        .getElementById("informacion-lote-uv")
+        .textContent =
+            codigoLote;
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+    document
+        .getElementById("panel-uv")
+        .classList
+        .remove("oculto");
+}
+
+
+function cerrarControlUV() {
+
+    document
+        .getElementById("panel-uv")
+        .classList
+        .add("oculto");
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+}
+
+
+/* =========================================================
+   UV ENCENDIDA
+   ========================================================= */
+
+function seleccionarUVEncendida(valor) {
+
+    controlUV.uv_encendida =
+        valor;
+
+    document
+        .getElementById("uv-encendida-si")
+        .classList
+        .remove("seleccionado");
+
+    document
+        .getElementById("uv-encendida-no")
+        .classList
+        .remove("seleccionado");
+
+    if (valor === "Sí") {
+
+        document
+            .getElementById("uv-encendida-si")
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById("uv-encendida-no")
+            .classList
+            .add("seleccionado");
+    }
+}
+
+
+/* =========================================================
+   INDICADOR
+   ========================================================= */
+
+function seleccionarIndicadorUV(valor) {
+
+    controlUV.indicador_funcionamiento =
+        valor;
+
+    document
+        .getElementById("uv-indicador-normal")
+        .classList
+        .remove("seleccionado");
+
+    document
+        .getElementById("uv-indicador-alarma")
+        .classList
+        .remove("seleccionado");
+
+    if (valor === "Normal") {
+
+        document
+            .getElementById("uv-indicador-normal")
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById("uv-indicador-alarma")
+            .classList
+            .add("seleccionado");
+    }
+}
+
+
+/* =========================================================
+   LÁMPARA
+   ========================================================= */
+
+function seleccionarLamparaUV(valor) {
+
+    controlUV.estado_lampara =
+        valor;
+
+    document
+        .getElementById("uv-lampara-conforme")
+        .classList
+        .remove("seleccionado");
+
+    document
+        .getElementById("uv-lampara-revision")
+        .classList
+        .remove("seleccionado");
+
+    if (valor === "Conforme") {
+
+        document
+            .getElementById("uv-lampara-conforme")
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById("uv-lampara-revision")
+            .classList
+            .add("seleccionado");
+    }
+}
+
+
+/* =========================================================
+   CAMISA DE CUARZO
+   ========================================================= */
+
+function seleccionarCamisaUV(valor) {
+
+    controlUV.estado_camisa =
+        valor;
+
+    document
+        .getElementById("uv-camisa-conforme")
+        .classList
+        .remove("seleccionado");
+
+    document
+        .getElementById("uv-camisa-limpieza")
+        .classList
+        .remove("seleccionado");
+
+    if (valor === "Conforme") {
+
+        document
+            .getElementById("uv-camisa-conforme")
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById("uv-camisa-limpieza")
+            .classList
+            .add("seleccionado");
+    }
+}
+
+
+
+/* =========================================================
+   GUARDAR CONTROL UV
+   ========================================================= */
+
+async function guardarControlUV() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "No existe un lote activo."
+        );
+
+        return;
+    }
+
+
+    const camposCompletos =
+    controlUV.uv_encendida !== null &&
+    controlUV.indicador_funcionamiento !== null &&
+    controlUV.estado_lampara !== null &&
+    controlUV.estado_camisa !== null;
+
+    if (!camposCompletos) {
+
+        alert(
+            "Debe completar todos los campos del control UV."
+        );
+
+        return;
+    }
+
+
+    const observaciones =
+        document
+        .getElementById("observaciones-uv")
+        .value
+        .trim();
+
+
+    const datos = {
+
+    uv_encendida:
+        controlUV.uv_encendida,
+
+    indicador_funcionamiento:
+        controlUV.indicador_funcionamiento,
+
+    estado_lampara:
+        controlUV.estado_lampara,
+
+    estado_camisa:
+        controlUV.estado_camisa,
+
+    observaciones:
+        observaciones
+
+};
+
+
+    const respuesta =
+        await fetch(
+            `/api/lotes/${loteActivoId}/uv`,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(datos)
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el control UV."
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Control UV guardado correctamente."
+    );
+
+
+    controlUV = {
+
+    uv_encendida: null,
+
+    indicador_funcionamiento: null,
+
+    estado_lampara: null,
+
+    estado_camisa: null
+
+};
+
+
+    document
+        .getElementById("observaciones-uv")
+        .value = "";
+
+
+    document
+        .querySelectorAll(
+            "#panel-uv .estado-btn"
+        )
+        .forEach(
+            boton =>
+                boton.classList.remove(
+                    "seleccionado"
+                )
+        );
+}
+
+/* =========================================================
+   PREPARACIÓN DE GARRAFONES
+   ========================================================= */
+
+
+function abrirPreparacionGarrafones() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+    }
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+    document
+        .getElementById(
+            "informacion-lote-garrafones"
+        )
+        .textContent =
+            codigoLote;
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+    document
+        .getElementById("panel-garrafones")
+        .classList
+        .remove("oculto");
+}
+
+
+function cerrarPreparacionGarrafones() {
+
+    document
+        .getElementById("panel-garrafones")
+        .classList
+        .add("oculto");
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+}
+
+
+/* =========================================================
+   CANTIDAD DE GARRAFONES
+   ========================================================= */
+
+
+function cambiarCantidadGarrafones(cambio) {
+
+    const nuevaCantidad =
+        preparacionGarrafones.cantidad_garrafones +
+        cambio;
+
+    if (nuevaCantidad < 1) {
+        return;
+    }
+
+    preparacionGarrafones.cantidad_garrafones =
+        nuevaCantidad;
+
+    document
+        .getElementById("cantidad-garrafones")
+        .textContent =
+            nuevaCantidad;
+}
+
+
+/* =========================================================
+   ENJUAGUES
+   ========================================================= */
+
+
+function seleccionarEnjuagueGarrafones(
+    numero,
+    valor
+) {
+
+    if (numero === 1) {
+
+        preparacionGarrafones.enjuague_1 =
+            valor;
+
+        document
+            .getElementById(
+                "garrafon-enjuague1-realizado"
+            )
+            .classList
+            .remove("seleccionado");
+
+        document
+            .getElementById(
+                "garrafon-enjuague1-no-realizado"
+            )
+            .classList
+            .remove("seleccionado");
+
+        if (valor === "Realizado") {
+
+            document
+                .getElementById(
+                    "garrafon-enjuague1-realizado"
+                )
+                .classList
+                .add("seleccionado");
+
+        } else {
+
+            document
+                .getElementById(
+                    "garrafon-enjuague1-no-realizado"
+                )
+                .classList
+                .add("seleccionado");
+        }
+
+    } else {
+
+        preparacionGarrafones.enjuague_2 =
+            valor;
+
+        document
+            .getElementById(
+                "garrafon-enjuague2-realizado"
+            )
+            .classList
+            .remove("seleccionado");
+
+        document
+            .getElementById(
+                "garrafon-enjuague2-no-realizado"
+            )
+            .classList
+            .remove("seleccionado");
+
+        if (valor === "Realizado") {
+
+            document
+                .getElementById(
+                    "garrafon-enjuague2-realizado"
+                )
+                .classList
+                .add("seleccionado");
+
+        } else {
+
+            document
+                .getElementById(
+                    "garrafon-enjuague2-no-realizado"
+                )
+                .classList
+                .add("seleccionado");
+        }
+    }
+}
+
+
+/* =========================================================
+   INSPECCIÓN
+   ========================================================= */
+
+
+function seleccionarInspeccionGarrafones(
+    valor
+) {
+
+    preparacionGarrafones.inspeccion_final =
+        valor;
+
+    document
+        .getElementById(
+            "garrafon-inspeccion-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+    document
+        .getElementById(
+            "garrafon-inspeccion-no-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+    if (valor === "Conforme") {
+
+        document
+            .getElementById(
+                "garrafon-inspeccion-conforme"
+            )
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById(
+                "garrafon-inspeccion-no-conforme"
+            )
+            .classList
+            .add("seleccionado");
+    }
+}
+
+
+/* =========================================================
+   HORAS
+   ========================================================= */
+
+
+function registrarHoraInicioGarrafones() {
+
+    const hora =
+        obtenerHoraActual();
+
+    preparacionGarrafones.hora_inicio =
+        hora;
+
+    document
+        .getElementById(
+            "hora-inicio-garrafones"
+        )
+        .textContent =
+            hora;
+}
+
+
+function registrarHoraFinalGarrafones() {
+
+    if (!preparacionGarrafones.hora_inicio) {
+
+        alert(
+            "Primero registre la hora de inicio."
+        );
+
+        return;
+    }
+
+    const hora =
+        obtenerHoraActual();
+
+    preparacionGarrafones.hora_final =
+        hora;
+
+    document
+        .getElementById(
+            "hora-final-garrafones"
+        )
+        .textContent =
+            hora;
+}
+
+
+/* =========================================================
+   GUARDAR PREPARACIÓN
+   ========================================================= */
+
+
+async function guardarPreparacionGarrafones() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "No existe un lote activo."
+        );
+
+        return;
+    }
+
+
+    const camposCompletos =
+
+        preparacionGarrafones
+            .cantidad_garrafones > 0 &&
+
+        preparacionGarrafones.enjuague_1 !== null &&
+
+        preparacionGarrafones.enjuague_2 !== null &&
+
+        preparacionGarrafones.inspeccion_final !== null &&
+
+        preparacionGarrafones.hora_inicio !== "" &&
+
+        preparacionGarrafones.hora_final !== "";
+
+
+    if (!camposCompletos) {
+
+        alert(
+            "Debe completar todos los campos de la preparación."
+        );
+
+        return;
+    }
+
+
+    const observaciones =
+        document
+        .getElementById(
+            "observaciones-garrafones"
+        )
+        .value
+        .trim();
+
+
+    const datos = {
+
+        cantidad_garrafones:
+            preparacionGarrafones
+                .cantidad_garrafones,
+
+        enjuague_1:
+            preparacionGarrafones.enjuague_1,
+
+        enjuague_2:
+            preparacionGarrafones.enjuague_2,
+
+        inspeccion_final:
+            preparacionGarrafones
+                .inspeccion_final,
+
+        hora_inicio:
+            preparacionGarrafones.hora_inicio,
+
+        hora_final:
+            preparacionGarrafones.hora_final,
+
+        observaciones:
+            observaciones
+    };
+
+
+    const respuesta =
+        await fetch(
+            `/api/lotes/${loteActivoId}/garrafones`,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(datos)
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar la preparación."
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Preparación de garrafones guardada correctamente."
+    );
+
+
+    preparacionGarrafones = {
+
+        cantidad_garrafones: 1,
+
+        enjuague_1: null,
+
+        enjuague_2: null,
+
+        inspeccion_final: null,
+
+        hora_inicio: "",
+
+        hora_final: ""
+    };
+
+
+    document
+        .getElementById(
+            "cantidad-garrafones"
+        )
+        .textContent =
+            "1";
+
+
+    document
+        .getElementById(
+            "observaciones-garrafones"
+        )
+        .value = "";
+
+
+    document
+        .querySelectorAll(
+            "#panel-garrafones .estado-btn"
+        )
+        .forEach(
+            boton =>
+                boton.classList.remove(
+                    "seleccionado"
+                )
+        );
+
+
+    document
+        .getElementById(
+            "hora-inicio-garrafones"
+        )
+        .textContent =
+            "No registrada";
+
+
+    document
+        .getElementById(
+            "hora-final-garrafones"
+        )
+        .textContent =
+            "No registrada";
+}
+
+/* =========================================================
+   REGISTRO DE LLENADO
+   ========================================================= */
+
+
+function abrirRegistroLlenado() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+    }
+
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+
+    document
+        .getElementById(
+            "informacion-lote-llenado"
+        )
+        .textContent =
+            codigoLote;
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("panel-llenado")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+function cerrarRegistroLlenado() {
+
+    detenerCronometro();
+
+
+    document
+        .getElementById("panel-llenado")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+/* =========================================================
+   TIPO DE ENVASE
+   ========================================================= */
+
+
+function seleccionarTipoEnvase(
+    tipo
+) {
+
+    registroLlenado.tipo_envase =
+        tipo;
+
+
+    document
+        .getElementById("llenado-garrafon")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("llenado-botella")
+        .classList
+        .remove("seleccionado");
+
+
+    if (tipo === "Garrafón") {
+
+        document
+            .getElementById("llenado-garrafon")
+            .classList
+            .add("seleccionado");
+
+
+        document
+            .getElementById(
+                "informacion-envase"
+            )
+            .innerHTML =
+                "<strong>Garrafón</strong><br>" +
+                "Volumen nominal: 20 L";
+
+
+    } else {
+
+        document
+            .getElementById("llenado-botella")
+            .classList
+            .add("seleccionado");
+
+
+        document
+            .getElementById(
+                "informacion-envase"
+            )
+            .innerHTML =
+                "<strong>Botella</strong><br>" +
+                "Volumen nominal: 600 mL";
+    }
+
+}
+
+
+
+/* =========================================================
+   INICIAR LLENADO
+   ========================================================= */
+
+
+function iniciarLlenado() {
+
+    if (!registroLlenado.tipo_envase) {
+
+        alert(
+            "Primero seleccione el tipo de envase."
+        );
+
+        return;
+    }
+
+
+    if (intervaloCronometro !== null) {
+
+        return;
+
+    }
+
+
+    const ahora =
+        new Date();
+
+
+    registroLlenado.hora_inicio =
+        formatoHora(ahora);
+
+
+    inicioCronometro =
+        ahora.getTime();
+
+
+    document
+        .getElementById(
+            "hora-inicio-llenado"
+        )
+        .textContent =
+            registroLlenado.hora_inicio;
+
+
+    document
+        .getElementById(
+            "btn-inicio-llenado"
+        )
+        .disabled =
+            true;
+
+
+    document
+        .getElementById(
+            "btn-final-llenado"
+        )
+        .disabled =
+            false;
+
+
+    actualizarCronometro();
+
+
+    intervaloCronometro =
+        setInterval(
+            actualizarCronometro,
+            1000
+        );
+
+}
+
+
+
+/* =========================================================
+   ACTUALIZAR CRONÓMETRO
+   ========================================================= */
+
+
+function actualizarCronometro() {
+
+    if (inicioCronometro === null) {
+
+        return;
+
+    }
+
+
+    const ahora =
+        Date.now();
+
+
+    const segundos =
+        Math.floor(
+            (ahora - inicioCronometro)
+            / 1000
+        );
+
+
+    const minutos =
+        Math.floor(
+            segundos / 60
+        );
+
+
+    const segundosRestantes =
+        segundos % 60;
+
+
+    const textoMinutos =
+        String(minutos)
+        .padStart(2, "0");
+
+
+    const textoSegundos =
+        String(segundosRestantes)
+        .padStart(2, "0");
+
+
+    document
+        .getElementById(
+            "cronometro-llenado"
+        )
+        .textContent =
+            `${textoMinutos}:${textoSegundos}`;
+
+}
+
+
+
+/* =========================================================
+   DETENER CRONÓMETRO
+   ========================================================= */
+
+
+function detenerCronometro() {
+
+    if (intervaloCronometro !== null) {
+
+        clearInterval(
+            intervaloCronometro
+        );
+
+        intervaloCronometro =
+            null;
+    }
+
+
+    inicioCronometro =
+        null;
+}
+
+
+
+/* =========================================================
+   FINALIZAR LLENADO
+   ========================================================= */
+
+
+function finalizarLlenado() {
+
+    if (!registroLlenado.hora_inicio) {
+
+        alert(
+            "Primero debe iniciar el llenado."
+        );
+
+        return;
+    }
+
+
+    const ahora =
+        new Date();
+
+
+    registroLlenado.hora_final =
+        formatoHora(ahora);
+
+
+    document
+        .getElementById(
+            "hora-final-llenado"
+        )
+        .textContent =
+            registroLlenado.hora_final;
+
+
+    detenerCronometro();
+
+
+    document
+        .getElementById(
+            "btn-final-llenado"
+        )
+        .disabled =
+            true;
+
+}
+
+
+
+/* =========================================================
+   FORMATO DE HORA
+   ========================================================= */
+
+
+function formatoHora(
+    fecha
+) {
+
+    return fecha
+        .toLocaleTimeString(
+            "es-CO",
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            }
+        );
+
+}
+
+
+
+/* =========================================================
+   FUGA
+   ========================================================= */
+
+
+function seleccionarFuga(
+    valor
+) {
+
+    registroLlenado.fuga =
+        valor;
+
+
+    document
+        .getElementById(
+            "llenado-fuga-si"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById(
+            "llenado-fuga-no"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Sí") {
+
+        document
+            .getElementById(
+                "llenado-fuga-si"
+            )
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById(
+                "llenado-fuga-no"
+            )
+            .classList
+            .add("seleccionado");
+    }
+
+}
+
+
+
+/* =========================================================
+   CONDICIÓN DEL LLENADO
+   ========================================================= */
+
+
+function seleccionarCondicionLlenado(
+    valor
+) {
+
+    registroLlenado.condicion_llenado =
+        valor;
+
+
+    document
+        .getElementById(
+            "llenado-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById(
+            "llenado-no-conforme"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Conforme") {
+
+        document
+            .getElementById(
+                "llenado-conforme"
+            )
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById(
+                "llenado-no-conforme"
+            )
+            .classList
+            .add("seleccionado");
+    }
+
+}
+
+
+
+/* =========================================================
+   GUARDAR REGISTRO
+   ========================================================= */
+
+
+async function guardarRegistroLlenado() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "No existe un lote activo."
+        );
+
+        return;
+    }
+
+
+    const camposCompletos =
+
+        registroLlenado.tipo_envase !== null &&
+
+        registroLlenado.hora_inicio !== "" &&
+
+        registroLlenado.hora_final !== "" &&
+
+        registroLlenado.fuga !== null &&
+
+        registroLlenado.condicion_llenado !== null;
+
+
+    if (!camposCompletos) {
+
+        alert(
+            "Debe completar todos los campos del registro de llenado."
+        );
+
+        return;
+    }
+
+
+    const observaciones =
+        document
+        .getElementById(
+            "observaciones-llenado"
+        )
+        .value
+        .trim();
+
+
+    const datos = {
+
+        tipo_envase:
+            registroLlenado.tipo_envase,
+
+        hora_inicio:
+            registroLlenado.hora_inicio,
+
+        hora_final:
+            registroLlenado.hora_final,
+
+        fuga:
+            registroLlenado.fuga,
+
+        condicion_llenado:
+            registroLlenado.condicion_llenado,
+
+        observaciones:
+            observaciones
+
+    };
+
+
+    const respuesta =
+        await fetch(
+            `/api/lotes/${loteActivoId}/llenado`,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(datos)
+            }
+        );
+
+
+    const resultado =
+        await respuesta.json();
+
+
+    if (!respuesta.ok) {
+
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el registro de llenado."
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Registro de llenado guardado correctamente."
+        +
+        "\n\n"
+        +
+        "Envase: "
+        +
+        resultado.numero_envase
+        +
+        "\n"
+        +
+        "Tiempo: "
+        +
+        resultado.tiempo_segundos
+        +
+        " segundos"
+    );
+
+
+    registroLlenado = {
+
+        tipo_envase: null,
+
+        hora_inicio: "",
+
+        hora_final: "",
+
+        fuga: null,
+
+        condicion_llenado: null
+
+    };
+
+
+    document
+        .getElementById(
+            "informacion-envase"
+        )
+        .textContent =
+            "Seleccione el tipo de envase.";
+
+
+    document
+        .getElementById(
+            "observaciones-llenado"
+        )
+        .value = "";
+
+
+    document
+        .querySelectorAll(
+            "#panel-llenado .estado-btn"
+        )
+        .forEach(
+            boton =>
+                boton.classList.remove(
+                    "seleccionado"
+                )
+        );
+
+
+    document
+        .getElementById(
+            "hora-inicio-llenado"
+        )
+        .textContent =
+            "No registrada";
+
+
+    document
+        .getElementById(
+            "hora-final-llenado"
+        )
+        .textContent =
+            "No registrada";
+
+
+    document
+        .getElementById(
+            "cronometro-llenado"
+        )
+        .textContent =
+            "00:00";
+
+
+    document
+        .getElementById(
+            "btn-inicio-llenado"
+        )
+        .disabled =
+            false;
+
+
+    document
+        .getElementById(
+            "btn-final-llenado"
+        )
+        .disabled =
+            true;
+
+}
+
+/* =========================================================
+   CONTROL DE CALIDAD
+   ========================================================= */
+
+
+function abrirControlCalidad() {
+
+    if (!loteActivoId) {
+
+        alert(
+            "Primero debe iniciar un lote."
+        );
+
+        return;
+    }
+
+
+    const codigoLote =
+        document
+        .getElementById("lote-creado")
+        .textContent;
+
+
+    document
+        .getElementById(
+            "informacion-lote-calidad"
+        )
+        .textContent =
+            codigoLote;
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("panel-calidad")
+        .classList
+        .remove("oculto");
+
+}
+
+
+
+function cerrarControlCalidad() {
+
+    document
+        .getElementById("panel-calidad")
+        .classList
+        .add("oculto");
+
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+}
+
+
+/* =========================================================
+   MOMENTO DEL MUESTREO
+   ========================================================= */
+
+function seleccionarMomentoMuestreo(
+    valor
+) {
+
+    controlCalidad.momento_muestreo =
+        valor;
+
+
+    document
+        .getElementById(
+            "calidad-momento-2dias"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById(
+            "calidad-momento-1mes"
+        )
+        .classList
+        .remove("seleccionado");
+
+
+    if (
+        valor ===
+        "2 días después del lavado del tanque"
+    ) {
+
+        document
+            .getElementById(
+                "calidad-momento-2dias"
+            )
+            .classList
+            .add("seleccionado");
+
+    } else {
+
+        document
+            .getElementById(
+                "calidad-momento-1mes"
+            )
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+/* =========================================================
+   CUMPLIMIENTO
+   ========================================================= */
+
+
+function seleccionarCumplimiento(
+    valor
+) {
+
+    controlCalidad.cumplimiento =
+        valor;
+
+
+    document
+        .getElementById("calidad-cumple")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("calidad-no-cumple")
+        .classList
+        .remove("seleccionado");
+
+
+    document
+        .getElementById("calidad-pendiente")
+        .classList
+        .remove("seleccionado");
+
+
+    if (valor === "Cumple") {
+
+        document
+            .getElementById("calidad-cumple")
+            .classList
+            .add("seleccionado");
+
+    }
+    else if (valor === "No cumple") {
+
+        document
+            .getElementById("calidad-no-cumple")
+            .classList
+            .add("seleccionado");
+
+    }
+    else {
+
+        document
+            .getElementById("calidad-pendiente")
+            .classList
+            .add("seleccionado");
+
+    }
+
+}
+
+
+
+/* =========================================================
+   GUARDAR CONTROL DE CALIDAD
+   ========================================================= */
+
+
+async function guardarControlCalidad() {
+
+    if (!loteActivoId) {
+        alert("No existe un lote activo.");
+        return;
+    }
+
+    if (
+        controlCalidad.momento_muestreo === null ||
+        controlCalidad.momento_muestreo === ""
+    ) {
+        alert(
+            "Debe seleccionar el momento del muestreo respecto al lavado del tanque."
+        );
+        return;
+    }
+
+    if (
+        controlCalidad.cumplimiento === null ||
+        controlCalidad.cumplimiento === ""
+    ) {
+        alert(
+            "Debe seleccionar el cumplimiento del control."
+        );
+        return;
+    }
+
+    const phTexto = document
+        .getElementById("calidad-ph")
+        .value
+        .trim();
+
+    const observaciones = document
+        .getElementById("observaciones-calidad")
+        .value
+        .trim();
+
+    const ph = phTexto === "" ? null : Number(phTexto);
+
+    if (
+        ph !== null &&
+        (
+            !Number.isFinite(ph) ||
+            ph < 0 ||
+            ph > 14
+        )
+    ) {
+        alert("El pH debe ser un número entre 0 y 14.");
+        return;
+    }
+
+    const datos = {
+        ph: ph,
+
+        momento_muestreo:
+            controlCalidad.momento_muestreo,
+
+        cumplimiento:
+            controlCalidad.cumplimiento,
+
+        observaciones: observaciones
+    };
+
+    const respuesta = await fetch(
+        `/api/lotes/${loteActivoId}/calidad`,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(datos)
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok) {
+        alert(
+            resultado.detail ||
+            "No se pudo guardar el control de calidad."
+        );
+        return;
+    }
+
+    alert(
+        "Control de calidad guardado correctamente."
+    );
+
+    controlCalidad = {
+        momento_muestreo: null,
+        cumplimiento: null
+    };
+
+    document.getElementById("calidad-ph").value = "";
+
+    document.getElementById(
+        "observaciones-calidad"
+    ).value = "";
+
+    document
+        .querySelectorAll(
+            "#panel-calidad .seleccionado"
+        )
+        .forEach(elemento => {
+            elemento.classList.remove("seleccionado");
+        });
+
+}
+
+
+document
+    .getElementById(
+        "calidad-ph"
+    )
+    .value = "";
+
+
+document
+    .getElementById(
+        "observaciones-calidad"
+    )
+    .value = "";
+
+
+document
+    .querySelectorAll(
+        "#panel-calidad .estado-btn"
+    )
+    .forEach(
+
+        boton =>
+
+            boton.classList.remove(
+                "seleccionado"
+            )
+
+    );
+
+
+/* =========================================================
+   MANTENIMIENTO: VARIABLES Y UTILIDADES
+   ========================================================= */
+
+let mantenimientoInicioMillis = null;
+
+let mantenimientoHoraInicio = "";
+
+let mantenimientoHoraFinal = "";
+
+let intervaloMantenimiento = null;
+
+
+function fechaActualLocalMantenimiento() {
+
+    const fecha = new Date();
+
+    const anio = fecha.getFullYear();
+
+    const mes = String(
+        fecha.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        fecha.getDate()
+    ).padStart(2, "0");
+
+    return `${anio}-${mes}-${dia}`;
+}
+
+
+function formatearHoraMantenimiento(fecha) {
+
+    const horas = String(
+        fecha.getHours()
+    ).padStart(2, "0");
+
+    const minutos = String(
+        fecha.getMinutes()
+    ).padStart(2, "0");
+
+    const segundos = String(
+        fecha.getSeconds()
+    ).padStart(2, "0");
+
+    return `${horas}:${minutos}:${segundos}`;
+}
+
+
+function formatearDuracionMantenimiento(segundos) {
+
+    const total = Math.max(
+        0,
+        Math.floor(Number(segundos) || 0)
+    );
+
+    const horas = String(
+        Math.floor(total / 3600)
+    ).padStart(2, "0");
+
+    const minutos = String(
+        Math.floor((total % 3600) / 60)
+    ).padStart(2, "0");
+
+    const segundosRestantes = String(
+        total % 60
+    ).padStart(2, "0");
+
+    return (
+        `${horas}:${minutos}:` +
+        `${segundosRestantes}`
+    );
+}
+
+
+function escaparHTMLMantenimiento(valor) {
+
+    return String(valor ?? "").replace(
+        /[&<>"']/g,
+        caracter => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[caracter]
+    );
+}
+
+
+/* =========================================================
+   ABRIR Y CERRAR EL MÓDULO
+   ========================================================= */
+
+
+function abrirMantenimiento() {
+
+    console.log(
+        "[Mantenimiento] Se recibió el clic del botón."
+    );
+
+    const menu = document.getElementById(
+        "menu-operacion"
+    );
+
+    const panel = document.getElementById(
+        "panel-mantenimiento"
+    );
+
+    const campoFecha = document.getElementById(
+        "mantenimiento-fecha"
+    );
+
+    if (!menu || !panel || !campoFecha) {
+
+        console.error(
+            "[Mantenimiento] No se encontró el menú, " +
+            "el panel o el campo de fecha.",
+            {
+                menuEncontrado: Boolean(menu),
+                panelEncontrado: Boolean(panel),
+                fechaEncontrada: Boolean(campoFecha)
+            }
+        );
+
+        alert(
+            "No se pudo abrir Mantenimiento. " +
+            "Revise la consola del navegador."
+        );
+
+        return;
+    }
+
+    menu.classList.add("oculto");
+
+    panel.classList.remove("oculto");
+
+    if (!campoFecha.value) {
+
+        campoFecha.value =
+            fechaActualLocalMantenimiento();
+
+    }
+
+    cargarMantenimientos();
+
+}
+
+
+function cerrarMantenimiento() {
+
+    if (
+        mantenimientoInicioMillis !== null &&
+        mantenimientoHoraFinal === ""
+    ) {
+
+        alert(
+            "Hay una intervención iniciada sin hora de finalización. " +
+            "Registre la finalización antes de salir."
+        );
+
+        return;
+    }
+
+    document
+        .getElementById("panel-mantenimiento")
+        .classList
+        .add("oculto");
+
+    document
+        .getElementById("menu-operacion")
+        .classList
+        .remove("oculto");
+
+}
+
+
+/* =========================================================
+   REGISTRO DEL TIEMPO DE INTERVENCIÓN
+   ========================================================= */
+
+
+function iniciarTiempoMantenimiento() {
+
+    if (mantenimientoInicioMillis !== null) {
+
+        alert(
+            "Ya hay una intervención con el tiempo iniciado."
+        );
+
+        return;
+    }
+
+    const ahora = new Date();
+
+    mantenimientoInicioMillis = ahora.getTime();
+
+    mantenimientoHoraInicio =
+        formatearHoraMantenimiento(ahora);
+
+    mantenimientoHoraFinal = "";
+
+    document.getElementById(
+        "hora-inicio-mantenimiento"
+    ).textContent = mantenimientoHoraInicio;
+
+    document.getElementById(
+        "hora-final-mantenimiento"
+    ).textContent = "No registrada";
+
+    document.getElementById(
+        "cronometro-mantenimiento"
+    ).textContent = "00:00:00";
+
+    document.getElementById(
+        "btn-inicio-mantenimiento"
+    ).disabled = true;
+
+    document.getElementById(
+        "btn-final-mantenimiento"
+    ).disabled = false;
+
+    if (intervaloMantenimiento !== null) {
+
+        clearInterval(intervaloMantenimiento);
+
+    }
+
+    intervaloMantenimiento = setInterval(
+        actualizarCronometroMantenimiento,
+        1000
+    );
+
+}
+
+
+function actualizarCronometroMantenimiento() {
+
+    if (mantenimientoInicioMillis === null) {
+        return;
+    }
+
+    const segundos = Math.floor(
+        (Date.now() - mantenimientoInicioMillis) / 1000
+    );
+
+    document.getElementById(
+        "cronometro-mantenimiento"
+    ).textContent =
+        formatearDuracionMantenimiento(segundos);
+
+}
+
+
+function finalizarTiempoMantenimiento() {
+
+    if (mantenimientoInicioMillis === null) {
+
+        alert(
+            "Primero debe registrar la hora de inicio."
+        );
+
+        return;
+    }
+
+    if (mantenimientoHoraFinal !== "") {
+
+        alert(
+            "La hora de finalización ya fue registrada."
+        );
+
+        return;
+    }
+
+    const ahora = new Date();
+
+    mantenimientoHoraFinal =
+        formatearHoraMantenimiento(ahora);
+
+    document.getElementById(
+        "hora-final-mantenimiento"
+    ).textContent = mantenimientoHoraFinal;
+
+    if (intervaloMantenimiento !== null) {
+
+        clearInterval(intervaloMantenimiento);
+
+        intervaloMantenimiento = null;
+
+    }
+
+    actualizarCronometroMantenimiento();
+
+    document.getElementById(
+        "btn-final-mantenimiento"
+    ).disabled = true;
+
+}
+
+
+function reiniciarTiempoMantenimiento() {
+
+    if (intervaloMantenimiento !== null) {
+
+        clearInterval(intervaloMantenimiento);
+
+        intervaloMantenimiento = null;
+
+    }
+
+    mantenimientoInicioMillis = null;
+
+    mantenimientoHoraInicio = "";
+
+    mantenimientoHoraFinal = "";
+
+    document.getElementById(
+        "hora-inicio-mantenimiento"
+    ).textContent = "No registrada";
+
+    document.getElementById(
+        "hora-final-mantenimiento"
+    ).textContent = "No registrada";
+
+    document.getElementById(
+        "cronometro-mantenimiento"
+    ).textContent = "00:00:00";
+
+    document.getElementById(
+        "btn-inicio-mantenimiento"
+    ).disabled = false;
+
+    document.getElementById(
+        "btn-final-mantenimiento"
+    ).disabled = true;
+
+}
+
+
+/* =========================================================
+   GUARDAR MANTENIMIENTO
+   ========================================================= */
+
+
+async function guardarMantenimiento() {
+
+    const operador = document
+        .getElementById("operador")
+        .value;
+
+    const fecha = document
+        .getElementById("mantenimiento-fecha")
+        .value;
+
+    const equipoSeleccionado = document
+        .getElementById("mantenimiento-equipo")
+        .value;
+
+    const equipoDetalle = document
+        .getElementById("mantenimiento-equipo-detalle")
+        .value
+        .trim();
+
+    const tipo = document
+        .getElementById("mantenimiento-tipo")
+        .value;
+
+    const descripcion = document
+        .getElementById("mantenimiento-descripcion")
+        .value
+        .trim();
+
+    const materiales = document
+        .getElementById("mantenimiento-materiales")
+        .value
+        .trim();
+
+    const estadoFinal = document
+        .getElementById("mantenimiento-estado-final")
+        .value;
+
+    const fechaProximo = document
+        .getElementById("mantenimiento-proximo")
+        .value;
+
+    const observaciones = document
+        .getElementById("mantenimiento-observaciones")
+        .value
+        .trim();
+
+
+    if (!operador) {
+
+        alert(
+            "Debe seleccionar el operador responsable."
+        );
+
+        return;
+    }
+
+    if (!fecha) {
+
+        alert(
+            "Debe registrar la fecha del mantenimiento."
+        );
+
+        return;
+    }
+
+    if (!equipoSeleccionado) {
+
+        alert(
+            "Debe seleccionar el equipo intervenido."
+        );
+
+        return;
+    }
+
+    if (
+        equipoSeleccionado === "Otro" &&
+        equipoDetalle === ""
+    ) {
+
+        alert(
+            "Especifique el nombre del equipo seleccionado como Otro."
+        );
+
+        return;
+    }
+
+    if (!tipo) {
+
+        alert(
+            "Debe seleccionar el tipo de intervención."
+        );
+
+        return;
+    }
+
+    if (!descripcion) {
+
+        alert(
+            "Debe describir el trabajo realizado."
+        );
+
+        return;
+    }
+
+    if (
+        mantenimientoHoraInicio === "" ||
+        mantenimientoHoraFinal === ""
+    ) {
+
+        alert(
+            "Debe registrar la hora de inicio y la hora de finalización."
+        );
+
+        return;
+    }
+
+    if (!estadoFinal) {
+
+        alert(
+            "Debe seleccionar el estado final del equipo."
+        );
+
+        return;
+    }
+
+
+    const equipo =
+        equipoSeleccionado === "Otro"
+            ? `Otro: ${equipoDetalle}`
+            : equipoSeleccionado;
+
+
+    const datos = {
+
+        operador_id: Number(operador),
+
+        fecha_mantenimiento: fecha,
+
+        equipo: equipo,
+
+        tipo_mantenimiento: tipo,
+
+        descripcion: descripcion,
+
+        repuestos_materiales: materiales,
+
+        hora_inicio: mantenimientoHoraInicio,
+
+        hora_final: mantenimientoHoraFinal,
+
+        estado_final: estadoFinal,
+
+        fecha_proximo_mantenimiento:
+            fechaProximo || null,
+
+        observaciones: observaciones
+
+    };
+
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/mantenimientos",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(datos)
+
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            alert(
+                resultado.detail ||
+                "No se pudo guardar el mantenimiento."
+            );
+
+            return;
+        }
+
+        alert(
+            "Mantenimiento guardado correctamente.\n\n" +
+            "Duración registrada: " +
+            formatearDuracionMantenimiento(
+                resultado.tiempo_segundos
+            )
+        );
+
+
+        document.getElementById(
+            "mantenimiento-fecha"
+        ).value = fechaActualLocalMantenimiento();
+
+        document.getElementById(
+            "mantenimiento-equipo"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-equipo-detalle"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-tipo"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-descripcion"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-materiales"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-estado-final"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-proximo"
+        ).value = "";
+
+        document.getElementById(
+            "mantenimiento-observaciones"
+        ).value = "";
+
+
+        reiniciarTiempoMantenimiento();
+
+        await cargarMantenimientos();
+
+    } catch (error) {
+
+        console.error(
+            "Error al guardar el mantenimiento:",
+            error
+        );
+
+        alert(
+            "No fue posible comunicarse con el servidor. " +
+            "Compruebe que la aplicación esté funcionando."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CONSULTAR HISTORIAL
+   ========================================================= */
+
+
+async function cargarMantenimientos() {
+
+    const cuerpo = document.getElementById(
+        "filas-mantenimientos"
+    );
+
+    cuerpo.innerHTML = `
+        <tr>
+            <td colspan="9">
+                Cargando historial...
+            </td>
+        </tr>
+    `;
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/mantenimientos"
+        );
+
+        const filas = await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                filas.detail ||
+                "No se pudo consultar el historial."
+            );
+
+        }
+
+        if (!Array.isArray(filas) || filas.length === 0) {
+
+            cuerpo.innerHTML = `
+                <tr>
+                    <td colspan="9">
+                        Todavía no hay mantenimientos registrados.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        cuerpo.innerHTML = filas.map(fila => {
+
+            const clasesEstado = {
+
+                "Vencido": "programacion-vencido",
+
+                "Próximo": "programacion-proximo",
+
+                "Programado": "programacion-programado",
+
+                "Sin programar": "programacion-sin-programar"
+
+            };
+
+            const claseEstado =
+                clasesEstado[fila.estado_programacion] ||
+                "programacion-sin-programar";
+
+            const duracion =
+                formatearDuracionMantenimiento(
+                    fila.tiempo_segundos
+                );
+
+            const proximo =
+                fila.fecha_proximo_mantenimiento ||
+                "No registrada";
+
+            let detalle = escaparHTMLMantenimiento(
+                fila.descripcion
+            );
+
+            if (fila.repuestos_materiales) {
+
+                detalle +=
+                    "<br><strong>Materiales:</strong> " +
+                    escaparHTMLMantenimiento(
+                        fila.repuestos_materiales
+                    );
+
+            }
+
+            if (fila.observaciones) {
+
+                detalle +=
+                    "<br><strong>Observaciones:</strong> " +
+                    escaparHTMLMantenimiento(
+                        fila.observaciones
+                    );
+
+            }
+
+            return `
+                <tr>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            fila.fecha_mantenimiento
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            fila.equipo
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            fila.tipo_mantenimiento
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            fila.operador_nombre
+                        )}
+                    </td>
+
+                    <td>
+                        ${duracion}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            fila.estado_final
+                        )}
+                    </td>
+
+                    <td>
+                        ${escaparHTMLMantenimiento(
+                            proximo
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="estado-programacion ${claseEstado}">
+                            ${escaparHTMLMantenimiento(
+                                fila.estado_programacion
+                            )}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${detalle}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error(
+            "Error al cargar mantenimientos:",
+            error
+        );
+
+        cuerpo.innerHTML = `
+            <tr>
+                <td colspan="9">
+                    No se pudo cargar el historial.
+                    Revise la conexión con el servidor.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   PEDIDOS: ESTADOS DISPONIBLES
+   ========================================================= */
+
+const estadosPedido = [
+    "Pendiente",
+    "En preparación",
+    "Listo para entregar",
+    "Entregado",
+    "Cancelado"
+];
+
+
+/* =========================================================
+   REGISTRAR PEDIDO
+   ========================================================= */
+
+async function registrarPedido() {
+
+    const oficina = document
+        .getElementById("pedido-oficina")
+        .value
+        .trim();
+
+    const solicitante = document
+        .getElementById("pedido-solicitante")
+        .value
+        .trim();
+
+    const garrafonesTexto = document
+        .getElementById("pedido-garrafones")
+        .value
+        .trim();
+
+    const botellasTexto = document
+        .getElementById("pedido-botellas")
+        .value
+        .trim();
+
+    const observacion = document
+        .getElementById("pedido-observacion")
+        .value
+        .trim();
+
+    const mensaje = document.getElementById(
+        "mensaje-pedido"
+    );
+
+
+    if (!oficina || !solicitante) {
+
+        alert(
+            "Debe indicar la oficina y el nombre del solicitante."
+        );
+
+        return;
+    }
+
+    if (
+        garrafonesTexto === "" ||
+        botellasTexto === ""
+    ) {
+
+        alert(
+            "Debe indicar las cantidades solicitadas."
+        );
+
+        return;
+    }
+
+    const garrafones = Number(garrafonesTexto);
+    const botellas = Number(botellasTexto);
+
+    if (
+        !Number.isSafeInteger(garrafones) ||
+        !Number.isSafeInteger(botellas) ||
+        garrafones < 0 ||
+        botellas < 0
+    ) {
+
+        alert(
+            "Las cantidades deben ser números enteros iguales o mayores que cero."
+        );
+
+        return;
+    }
+
+    if (garrafones === 0 && botellas === 0) {
+
+        alert(
+            "Debe solicitar al menos un garrafón o una botella."
+        );
+
+        return;
+    }
+
+
+    const datos = {
+        oficina: oficina,
+        solicitante: solicitante,
+        garrafones: garrafones,
+        botellas: botellas,
+        observacion: observacion
+    };
+
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/pedidos",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(datos)
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            alert(
+                resultado.detail ||
+                "No se pudo registrar el pedido."
+            );
+
+            return;
+        }
+
+
+        mensaje.textContent =
+            "Pedido #" + resultado.id +
+            " registrado correctamente. Estado: Pendiente.";
+
+        document.getElementById(
+            "pedido-oficina"
+        ).value = "";
+
+        document.getElementById(
+            "pedido-solicitante"
+        ).value = "";
+
+        document.getElementById(
+            "pedido-garrafones"
+        ).value = "0";
+
+        document.getElementById(
+            "pedido-botellas"
+        ).value = "0";
+
+        document.getElementById(
+            "pedido-observacion"
+        ).value = "";
+
+
+        await cargarPedidos();
+
+    } catch (error) {
+
+        console.error(
+            "Error al registrar el pedido:",
+            error
+        );
+
+        alert(
+            "No fue posible comunicarse con el servidor."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CARGAR HISTORIAL DE PEDIDOS
+   ========================================================= */
+
+async function cargarPedidos() {
+
+    const cuerpo = document.getElementById(
+        "filas-pedidos"
+    );
+
+    if (!cuerpo) {
+        return;
+    }
+
+    cuerpo.innerHTML = `
+        <tr>
+            <td colspan="8">
+                Cargando pedidos...
+            </td>
+        </tr>
+    `;
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/pedidos"
+        );
+
+        const pedidos = await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                pedidos.detail ||
+                "No se pudo consultar el historial."
+            );
+
+        }
+
+        if (
+            !Array.isArray(pedidos) ||
+            pedidos.length === 0
+        ) {
+
+            cuerpo.innerHTML = `
+                <tr>
+                    <td colspan="8">
+                        Todavía no hay pedidos registrados.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        cuerpo.innerHTML = pedidos.map(pedido => {
+
+            const id = Number(pedido.id);
+
+            const fecha =
+                escaparHTMLMantenimiento(
+                    pedido.fecha_solicitud
+                );
+
+            const oficina =
+                escaparHTMLMantenimiento(
+                    pedido.oficina
+                );
+
+            const solicitante =
+                escaparHTMLMantenimiento(
+                    pedido.solicitante
+                );
+
+            const observacion =
+                escaparHTMLMantenimiento(
+                    pedido.observacion || "—"
+                );
+
+            const estado =
+                escaparHTMLMantenimiento(
+                    pedido.estado
+                );
+
+            const opciones = estadosPedido.map(
+                opcion => `
+                    <option
+                        value="${opcion}"
+                        ${opcion === pedido.estado ? "selected" : ""}
+                    >
+                        ${opcion}
+                    </option>
+                `
+            ).join("");
+
+
+            return `
+                <tr>
+
+                    <td>${fecha}</td>
+
+                    <td>${oficina}</td>
+
+                    <td>${solicitante}</td>
+
+                    <td>${Number(pedido.garrafones)}</td>
+
+                    <td>${Number(pedido.botellas)}</td>
+
+                    <td>${observacion}</td>
+
+                    <td>${estado}</td>
+
+                    <td>
+                        <div class="acciones-pedido">
+
+                            <select
+                                id="estado-pedido-${id}"
+                                aria-label="Nuevo estado del pedido ${id}"
+                            >
+                                ${opciones}
+                            </select>
+
+                            <button
+                                type="button"
+                                class="btn-secundario"
+                                onclick="actualizarEstadoPedido(${id})"
+                            >
+                                Guardar estado
+                            </button>
+
+                        </div>
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error(
+            "Error al cargar pedidos:",
+            error
+        );
+
+        cuerpo.innerHTML = `
+            <tr>
+                <td colspan="8">
+                    No se pudo cargar el historial.
+                    Compruebe el servidor y vuelva a intentarlo.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR ESTADO DE PEDIDO
+   ========================================================= */
+
+async function actualizarEstadoPedido(pedidoId) {
+
+    const selector = document.getElementById(
+        "estado-pedido-" + pedidoId
+    );
+
+    if (!selector) {
+
+        alert(
+            "No se encontró el selector de estado del pedido."
+        );
+
+        return;
+    }
+
+    const estado = selector.value;
+
+    if (!estadosPedido.includes(estado)) {
+
+        alert(
+            "El estado seleccionado no es válido."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const respuesta = await fetch(
+            `/api/pedidos/${pedidoId}/estado`,
+            {
+                method: "PATCH",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    estado: estado
+                })
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+
+            alert(
+                resultado.detail ||
+                "No se pudo actualizar el estado del pedido."
+            );
+
+            return;
+        }
+
+        alert(
+            "Pedido #" + pedidoId +
+            " actualizado a: " + resultado.estado
+        );
+
+        await cargarPedidos();
+
+    } catch (error) {
+
+        console.error(
+            "Error al actualizar el pedido:",
+            error
+        );
+
+        alert(
+            "No fue posible comunicarse con el servidor."
+        );
+
+    }
+
+}
+
+/* =========================================================
+   VERIFICAR SESIÓN DEL OPERADOR
+   ========================================================= */
+
+async function verificarSesionOperador() {
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/sesion-operador"
+        );
+
+        if (!respuesta.ok) {
+
+            window.location.href = "/";
+
+            return;
+
+        }
+
+        const sesion = await respuesta.json();
+
+        await cargarOperadores();
+
+        const selector = document.getElementById(
+            "operador"
+        );
+
+        selector.value = String(
+            sesion.operador_id
+        );
+
+        selector.disabled = true;
+
+        document.getElementById(
+            "operador-sesion-nombre"
+        ).textContent =
+            sesion.operador_nombre;
+
+        await cargarPedidos();
+
+    } catch (error) {
+
+        console.error(
+            "Error al verificar la sesión:",
+            error
+        );
+
+        window.location.href = "/";
+
+    }
+
+}
+
+
+/* =========================================================
+   CERRAR SESIÓN DEL OPERADOR
+   ========================================================= */
+
+async function cerrarSesionOperador() {
+
+    try {
+
+        await fetch(
+            "/api/cerrar-sesion",
+            {
+                method: "POST"
+            }
+        );
+
+    } finally {
+
+        window.location.href = "/";
+
+    }
+
+}
+
+
+/* =========================================================
+   CARGAR OPERADORES AL INICIAR
+   ========================================================= */
+
+
+verificarSesionOperador();
+
+</script>
+
+
+</body>
+
+</html>
