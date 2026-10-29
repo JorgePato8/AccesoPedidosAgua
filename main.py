@@ -45,6 +45,13 @@ CLAVE_OPERADORES = os.getenv(
     ""
 ).strip()
 
+# Clave independiente para la limpieza inicial de datos de prueba.
+# Debe configurarse como variable de entorno en Render; no se guarda en GitHub.
+CLAVE_ADMIN_DATOS = os.getenv(
+    "AGUA_POTABLE_RESET_TOKEN",
+    ""
+).strip()
+
 SESIONES_OPERADORES = {}
 
 DURACION_SESION_SEGUNDOS = 8 * 60 * 60
@@ -304,6 +311,10 @@ RUTAS_API_PUBLICAS = {
     ("POST", "/api/acceso-operador"),
     ("POST", "/api/cerrar-sesion"),
     ("POST", "/api/pedidos"),
+    # Estas dos rutas están protegidas por una clave de administración
+    # independiente, validada dentro de cada función.
+    ("POST", "/api/admin/limpiar-datos"),
+    ("POST", "/api/admin/operadores"),
 }
 
 
@@ -1897,6 +1908,191 @@ def crear_operador(datos: dict):
         "id": operador_id,
         "nombre": nombre
     }
+
+
+# =========================================================
+# ADMINISTRACIÓN PROTEGIDA DE DATOS DE PRUEBA
+# =========================================================
+
+TABLAS_DATOS_OPERATIVOS = [
+    "controles_tratamiento",
+    "controles_tanque",
+    "controles_uv",
+    "preparacion_garrafones",
+    "registros_llenado",
+    "controles_calidad",
+    "controles_limpieza",
+    "mantenimientos",
+    "lotes",
+    "pedidos",
+    "operadores",
+]
+
+
+@app.get("/administrar-datos", response_class=HTMLResponse)
+def pagina_administrar_datos():
+    """Pantalla independiente para borrar datos de prueba y crear el primer operador."""
+    return HTMLResponse(r"""<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administración de datos | AguaPotableLab</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6f9;color:#17212b;margin:0;padding:24px}
+main{max-width:760px;margin:0 auto}section{background:white;border:1px solid #d7dee7;border-radius:12px;padding:22px;margin:18px 0}
+h1{font-size:26px}h2{font-size:19px}p{line-height:1.5}.warning{color:#9b1c1c;font-weight:bold}
+label{display:block;font-weight:bold;margin:12px 0 6px}input{box-sizing:border-box;width:100%;padding:11px;border:1px solid #9aa8b7;border-radius:6px;font-size:16px}
+button{border:0;border-radius:7px;padding:12px 16px;cursor:pointer;font-weight:bold;margin-top:12px;background:#155e75;color:white}
+.danger{background:#a61b1b}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#edf2f7;padding:12px;border-radius:6px}
+small{color:#495766}
+</style></head>
+<body><main>
+<h1>Administración de datos de AguaPotableLab</h1>
+<p>Esta página permite borrar los registros de prueba sin borrar las tablas ni modificar la estructura de la aplicación. También permite crear el primer operador después de una limpieza completa.</p>
+<section>
+<h2>Clave de administración</h2>
+<label for="token">AGUA_POTABLE_RESET_TOKEN configurada en Render</label>
+<input id="token" type="password" autocomplete="off" placeholder="Introduce la clave de administración">
+<small>La clave no debe ponerse en el código ni compartirse. Esta pantalla no la guarda.</small>
+</section>
+<section>
+<h2>1. Borrar todos los datos de prueba</h2>
+<p class="warning">Esta operación es irreversible. Eliminará todos los pedidos, lotes, controles, registros de limpieza, mantenimientos y operadores. No elimina ni recrea las tablas.</p>
+<label for="confirmacion">Escribe exactamente BORRAR TODO para confirmar</label>
+<input id="confirmacion" placeholder="BORRAR TODO" autocomplete="off">
+<button class="danger" id="btnReset">BORRAR LOS DATOS</button>
+</section>
+<section>
+<h2>2. Crear el primer operador real</h2>
+<p>Después de borrar todos los operadores, crea aquí al menos uno para poder iniciar sesión normalmente. Luego podrás agregar los demás desde la sección Operadores de la aplicación.</p>
+<label for="nombre">Nombre del operador</label>
+<input id="nombre" autocomplete="off" placeholder="Nombre y apellido">
+<button id="btnOperador">CREAR OPERADOR</button>
+</section>
+<section><h2>Resultado</h2><pre id="resultado">A la espera de una acción.</pre></section>
+</main>
+<script>
+const tokenInput = document.getElementById('token');
+const output = document.getElementById('resultado');
+async function enviar(url, datos) {
+  output.textContent = 'Procesando…';
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(datos)
+    });
+    const contenido = await r.json();
+    output.textContent = JSON.stringify(contenido, null, 2);
+    if (!r.ok) alert(contenido.detail || 'La operación no pudo completarse.');
+    else alert(contenido.mensaje || 'Operación completada.');
+  } catch (e) {
+    output.textContent = 'No se pudo conectar con la aplicación. Revisa que Render haya terminado de iniciar.';
+  }
+}
+document.getElementById('btnReset').addEventListener('click', async () => {
+  if (document.getElementById('confirmacion').value.trim() !== 'BORRAR TODO') {
+    alert('Escribe exactamente BORRAR TODO para confirmar.'); return;
+  }
+  if (!confirm('¿Confirmas que deseas borrar TODOS los registros y operadores? No se puede deshacer.')) return;
+  await enviar('/api/admin/limpiar-datos', {
+    token: tokenInput.value,
+    confirmacion: document.getElementById('confirmacion').value.trim()
+  });
+});
+document.getElementById('btnOperador').addEventListener('click', async () => {
+  const nombre = document.getElementById('nombre').value.trim();
+  if (!nombre) { alert('Escribe el nombre del operador.'); return; }
+  await enviar('/api/admin/operadores', {token: tokenInput.value, nombre});
+  document.getElementById('nombre').value = '';
+});
+</script></body></html>""")
+
+
+def validar_clave_admin(token: str):
+    if not CLAVE_ADMIN_DATOS:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Falta configurar AGUA_POTABLE_RESET_TOKEN en las variables "
+                "de entorno de Render."
+            ),
+        )
+    if not isinstance(token, str) or not secrets.compare_digest(
+        token.encode("utf-8"), CLAVE_ADMIN_DATOS.encode("utf-8")
+    ):
+        raise HTTPException(status_code=401, detail="Clave de administración incorrecta.")
+
+
+@app.post("/api/admin/limpiar-datos")
+def limpiar_datos_prueba(datos: dict):
+    """Vacía registros en orden compatible con las claves foráneas y conserva el esquema."""
+    validar_clave_admin(datos.get("token", ""))
+    if datos.get("confirmacion") != "BORRAR TODO":
+        raise HTTPException(
+            status_code=400,
+            detail="Confirmación incorrecta. Escribe BORRAR TODO.",
+        )
+
+    connection = get_connection()
+    conteos = {}
+    try:
+        # Se borran primero las tablas dependientes y al final lotes y operadores.
+        connection.execute("BEGIN IMMEDIATE")
+        for tabla in TABLAS_DATOS_OPERATIVOS:
+            conteos[tabla] = connection.execute(
+                f"SELECT COUNT(*) FROM {tabla}"
+            ).fetchone()[0]
+        for tabla in TABLAS_DATOS_OPERATIVOS:
+            connection.execute(f"DELETE FROM {tabla}")
+        # Reinicia los consecutivos de las tablas con AUTOINCREMENT.
+        connection.execute("DELETE FROM sqlite_sequence")
+        connection.commit()
+    except Exception:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+
+    # Invalida las sesiones de operadores de prueba.
+    SESIONES_OPERADORES.clear()
+    return {
+        "mensaje": "Limpieza completada. Se conservaron las tablas y la estructura.",
+        "registros_eliminados_por_tabla": conteos,
+        "siguiente_paso": "Crea al menos un operador real desde esta misma página; después podrás iniciar sesión y agregar los demás desde Operadores.",
+    }
+
+
+@app.post("/api/admin/operadores")
+def crear_primer_operador(datos: dict):
+    """Permite crear un operador inicial mediante la clave administrativa, sin sesión previa."""
+    validar_clave_admin(datos.get("token", ""))
+    nombre = datos.get("nombre", "")
+    if not isinstance(nombre, str) or not nombre.strip():
+        raise HTTPException(status_code=400, detail="El nombre del operador es obligatorio.")
+    nombre = nombre.strip()
+
+    connection = get_connection()
+    try:
+        existente = connection.execute(
+            "SELECT id FROM operadores WHERE LOWER(TRIM(nombre)) = LOWER(TRIM(?))",
+            (nombre,),
+        ).fetchone()
+        if existente:
+            raise HTTPException(status_code=409, detail="Ya existe un operador con ese nombre.")
+        cursor = connection.execute(
+            "INSERT INTO operadores (nombre) VALUES (?)",
+            (nombre,),
+        )
+        connection.commit()
+        return {
+            "mensaje": "Operador creado correctamente.",
+            "id": cursor.lastrowid,
+            "nombre": nombre,
+        }
+    finally:
+        connection.close()
 
 
 # =========================================================
