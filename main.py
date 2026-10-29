@@ -57,11 +57,9 @@ AREAS_UNIVERSIDAD = [
     'Comunicacion y Marketing',
     'Contabilidad',
     'Directorio Ejecutivo',
-    'FACULTAD DE CIENCIAS JURIDICAS, SOCIALES Y HUMANISTICAS',
     'Gestion de Calidad y Autoevaluacion',
     'Idiomas',
     'Investigacion',
-    'OTROS',
     'Postgrado',
     'Pregrado - Administracion General',
     'Pregrado - Comercio Internacional',
@@ -73,7 +71,6 @@ AREAS_UNIVERSIDAD = [
     'Pregrado - Ingenieria Electrica',
     'Pregrado - Ingenieria Electronica y Sistemas',
     'Pregrado - Ingenieria en Marketing y Publicidad',
-    'Pregrado - Ingenieria en Redes y Telecomunicaciones',
     'Pregrado - Ingenieria Financiera',
     'Pregrado - Ingenieria Industrial y Comercial',
     'Pregrado - Internacionalizacion',
@@ -94,8 +91,14 @@ AREAS_UNIVERSIDAD = [
     'Laboratorio de eléctrica',
     'Laboratorio de Ciencias básicas',
     'Laboratorio de Psicología',
-    'consultorio jurídico',
-    'publicidad',
+    'Consultorio jurídico',
+    'Publicidad',
+    'Sala de docentes',
+    'CPE',
+    'Defensa de grado',
+    'Laboratorio de electrónica',
+    'Laboratorio de sistemas',
+
 ]
 
 
